@@ -1,0 +1,111 @@
+{% extends "lms/base.html" %}
+
+{% block title %}
+    Student Registration | Kameera Technologies
+{% endblock %}
+
+
+{% block content %}
+
+<section class="auth-page">
+
+    <div class="auth-card register-card">
+
+        <div class="auth-icon">
+            🎓
+        </div>
+
+
+        <h1>
+            Create Student Account
+        </h1>
+
+
+        <p class="auth-subtitle">
+
+            Join Kameera Technologies and
+            start learning today.
+
+        </p>
+
+
+        {% if messages %}
+
+            {% for message in messages %}
+
+                <div class="success-message">
+
+                    {{ message }}
+
+                </div>
+
+            {% endfor %}
+
+        {% endif %}
+
+
+        <form
+            method="post"
+            class="auth-form"
+        >
+
+            {% csrf_token %}
+
+
+            {% for field in form %}
+
+                <div class="form-group">
+
+                    {{ field.label_tag }}
+
+                    {{ field }}
+
+                    {% if field.help_text %}
+
+                        <small>
+                            {{ field.help_text }}
+                        </small>
+
+                    {% endif %}
+
+
+                    {% for error in field.errors %}
+
+                        <div class="field-error">
+                            {{ error }}
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+            {% endfor %}
+
+
+            <button
+                type="submit"
+                class="auth-submit"
+            >
+                Create Account
+            </button>
+
+        </form>
+
+
+        <div class="auth-footer">
+
+            <p>
+                Already have an account?
+            </p>
+
+            <a href="{% url 'student_login' %}">
+                Login Here
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}

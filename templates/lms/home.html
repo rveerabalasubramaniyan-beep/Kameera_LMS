@@ -1,0 +1,381 @@
+{% extends "lms/base.html" %}
+
+{% load static %}
+
+{% block title %}
+    Kameera Technologies | Data is Everything
+{% endblock %}
+
+
+{% block content %}
+
+<!-- ============================================================
+     HERO
+============================================================ -->
+
+<section class="hero">
+
+    <div class="container hero-content">
+
+        <div class="hero-text">
+
+            <div class="badge">
+                🚀 Learn. Build. Grow.
+            </div>
+
+
+            <h1>
+
+                Turn Your Skills Into
+
+                <span>
+                    Career Opportunities
+                </span>
+
+            </h1>
+
+
+            <p>
+
+                Welcome to Kameera Technologies —
+                your learning platform for Data Analytics,
+                Business Intelligence and modern technology skills.
+
+            </p>
+
+
+            <div class="hero-buttons">
+
+                <a
+                    href="{% url 'course_list' %}"
+                    class="primary-btn"
+                >
+                    Explore Courses
+                </a>
+
+
+                <a
+                    href="#about"
+                    class="secondary-btn"
+                >
+                    Learn More
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <!-- HERO VISUAL -->
+
+        <div class="hero-card">
+
+            <div class="floating-card card-one">
+                📊 Power BI
+            </div>
+
+            <div class="floating-card card-two">
+                🗄️ SQL
+            </div>
+
+            <div class="floating-card card-three">
+                📈 Excel
+            </div>
+
+            <div class="dashboard-icon">
+                💻
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ============================================================
+     COURSES
+============================================================ -->
+
+<section class="section">
+
+    <div class="container">
+
+        <div class="section-heading">
+
+            <span>
+                OUR PROGRAMS
+            </span>
+
+            <h2>
+                Learn Skills That Matter
+            </h2>
+
+            <p>
+                Practical courses designed to help you
+                build real-world technical skills.
+            </p>
+
+        </div>
+
+
+        <div class="course-grid">
+
+
+            <!-- POWER BI -->
+
+            <div class="course-card">
+
+                <div class="course-icon">
+                    📊
+                </div>
+
+                <h3>
+                    Power BI
+                </h3>
+
+                <p>
+                    Learn dashboards, data modelling,
+                    DAX and business intelligence.
+                </p>
+
+                <a href="{% url 'course_list' %}">
+                    Explore →
+                </a>
+
+            </div>
+
+
+            <!-- SQL -->
+
+            <div class="course-card">
+
+                <div class="course-icon">
+                    🗄️
+                </div>
+
+                <h3>
+                    SQL
+                </h3>
+
+                <p>
+                    Master SQL queries, databases,
+                    joins, procedures and analytics.
+                </p>
+
+                <a href="{% url 'course_list' %}">
+                    Explore →
+                </a>
+
+            </div>
+
+
+            <!-- EXCEL -->
+
+            <div class="course-card">
+
+                <div class="course-icon">
+                    📈
+                </div>
+
+                <h3>
+                    Advanced Excel
+                </h3>
+
+                <p>
+                    Learn Excel formulas, Power Query,
+                    dashboards and automation.
+                </p>
+
+                <a href="{% url 'course_list' %}">
+                    Explore →
+                </a>
+
+            </div>
+
+
+            <!-- PYTHON -->
+
+            <div class="course-card">
+
+                <div class="course-icon">
+                    🐍
+                </div>
+
+                <h3>
+                    Python
+                </h3>
+
+                <p>
+                    Build Python applications and
+                    develop your programming skills.
+                </p>
+
+                <a href="{% url 'course_list' %}">
+                    Explore →
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ============================================================
+     ABOUT
+============================================================ -->
+
+<section
+    id="about"
+    class="about-section"
+>
+
+    <div class="container about-grid">
+
+        <div>
+
+            <span class="section-label">
+                WHY KAMEERA
+            </span>
+
+            <h2>
+
+                Data is Everything.
+
+                <br>
+
+                Skills are Your Future.
+
+            </h2>
+
+
+            <p>
+
+                Kameera Technologies is focused on
+                practical learning and career-oriented
+                technology education.
+
+            </p>
+
+
+            <p>
+
+                Our platform is designed to provide
+                students with structured learning,
+                practical exercises and real-world
+                projects.
+
+            </p>
+
+        </div>
+
+
+        <div class="stats">
+
+            <div class="stat-box">
+
+                <strong>
+                    5+
+                </strong>
+
+                <span>
+                    Technology Courses
+                </span>
+
+            </div>
+
+
+            <div class="stat-box">
+
+                <strong>
+                    100%
+                </strong>
+
+                <span>
+                    Practical Learning
+                </span>
+
+            </div>
+
+
+            <div class="stat-box">
+
+                <strong>
+                    24/7
+                </strong>
+
+                <span>
+                    Learning Access
+                </span>
+
+            </div>
+
+
+            <div class="stat-box">
+
+                <strong>
+                    ∞
+                </strong>
+
+                <span>
+                    Growth Potential
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ============================================================
+     CTA
+============================================================ -->
+
+<section
+    id="contact"
+    class="cta-section"
+>
+
+    <div class="container">
+
+        <h2>
+            Ready to Upgrade Your Skills?
+        </h2>
+
+        <p>
+            Start your learning journey with
+            Kameera Technologies today.
+        </p>
+
+
+        {% if user.is_authenticated %}
+
+            <a
+                href="{% url 'student_dashboard' %}"
+                class="primary-btn"
+            >
+                Go to Dashboard
+            </a>
+
+        {% else %}
+
+            <a
+                href="{% url 'student_register' %}"
+                class="primary-btn"
+            >
+                Get Started
+            </a>
+
+        {% endif %}
+
+    </div>
+
+</section>
+
+{% endblock %}

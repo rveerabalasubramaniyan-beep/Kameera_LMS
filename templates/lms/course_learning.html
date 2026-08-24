@@ -1,0 +1,601 @@
+{% extends "lms/base.html" %}
+
+
+{% block title %}
+    {{ course.title }} | Kameera Technologies
+{% endblock %}
+
+
+{% block content %}
+
+<section class="learning-page">
+
+    <div class="container">
+
+
+        <!-- =====================================================
+             BREADCRUMB
+        ====================================================== -->
+
+        <div class="learning-breadcrumb">
+
+            <a href="{% url 'student_dashboard' %}">
+                ← Dashboard
+            </a>
+
+            <span>/</span>
+
+            <span>
+                {{ course.title }}
+            </span>
+
+        </div>
+
+
+        <!-- =====================================================
+             COURSE HEADER
+        ====================================================== -->
+
+        <div class="learning-header">
+
+            <span class="section-label">
+                KAMEERA LMS
+            </span>
+
+            <h1>
+                {{ course.title }}
+            </h1>
+
+            {% if course.short_description %}
+
+                <p>
+                    {{ course.short_description }}
+                </p>
+
+            {% else %}
+
+                <p>
+                    Start learning with Kameera Technologies.
+                </p>
+
+            {% endif %}
+
+        </div>
+
+
+        <!-- =====================================================
+             COURSE LAYOUT
+        ====================================================== -->
+
+        <div class="learning-layout">
+
+
+            <!-- =================================================
+                 MAIN CONTENT
+            ================================================== -->
+
+            <main class="learning-main">
+
+
+                <!-- =================================================
+                     WELCOME
+                ================================================== -->
+
+                <div class="learning-card">
+
+                    <h2>
+                        Welcome to {{ course.title }}
+                    </h2>
+
+                    <p>
+                        You are enrolled in this course.
+                        Start your learning journey and build
+                        practical skills with Kameera Technologies.
+                    </p>
+
+                </div>
+
+
+                <!-- =================================================
+                     COURSE DESCRIPTION
+                ================================================== -->
+
+                <div class="learning-card">
+
+                    <h2>
+                        About This Course
+                    </h2>
+
+
+                    {% if course.description %}
+
+                        <p>
+                            {{ course.description }}
+                        </p>
+
+                    {% else %}
+
+                        <p>
+                            Course description will be available soon.
+                        </p>
+
+                    {% endif %}
+
+                </div>
+
+
+                <!-- =================================================
+                     COURSE CONTENT
+                ================================================== -->
+
+                <div class="learning-card">
+
+                    <div class="course-content-header">
+
+                        <div>
+
+                            <span class="section-label">
+                                COURSE CONTENT
+                            </span>
+
+                            <h2>
+                                Lessons
+                            </h2>
+
+                        </div>
+
+
+                        <span class="lesson-count">
+
+                            {{ total_lessons }}
+                            Lesson{{ total_lessons|pluralize }}
+
+                        </span>
+
+                    </div>
+
+
+                    {% if lessons %}
+
+                        <div class="course-topics">
+
+
+                            {% for lesson in lessons %}
+
+                                <div class="topic-item">
+
+
+                                    <!-- =================================
+                                         LESSON NUMBER
+                                    ================================== -->
+
+                                    <div class="topic-number">
+
+                                        {{ forloop.counter|stringformat:"02d" }}
+
+                                    </div>
+
+
+                                    <!-- =================================
+                                         LESSON CONTENT
+                                    ================================== -->
+
+                                    <div class="topic-content">
+
+                                        <h3>
+                                            {{ lesson.title }}
+                                        </h3>
+
+
+                                        <!-- LESSON DESCRIPTION -->
+
+                                        {% if lesson.description %}
+
+                                            <p>
+                                                {{ lesson.description }}
+                                            </p>
+
+                                        {% else %}
+
+                                            <p>
+                                                Start this lesson
+                                                to begin learning.
+                                            </p>
+
+                                        {% endif %}
+
+
+                                        <!-- =================================
+                                             LESSON MATERIALS
+                                        ================================== -->
+
+                                        <div class="lesson-materials">
+
+
+                                            {% if lesson.video_url %}
+
+                                                <span>
+                                                    🎥 Video Available
+                                                </span>
+
+                                            {% else %}
+
+                                                <span>
+                                                    🎥 Video Coming Soon
+                                                </span>
+
+                                            {% endif %}
+
+
+                                            {% if lesson.pdf_file %}
+
+                                                <span>
+                                                    📄 PDF Available
+                                                </span>
+
+                                            {% endif %}
+
+
+                                        </div>
+
+
+                                        <!-- =================================
+                                             LESSON STATUS
+                                        ================================== -->
+
+                                        {% if lesson.is_completed %}
+
+                                            <div
+                                                style="
+                                                    margin-top:12px;
+                                                    padding:10px 15px;
+                                                    background:#eaf8ef;
+                                                    border-radius:8px;
+                                                    display:inline-block;
+                                                "
+                                            >
+
+                                                ✓ Completed
+
+                                            </div>
+
+                                        {% else %}
+
+                                            <div
+                                                style="
+                                                    margin-top:12px;
+                                                    color:#666;
+                                                "
+                                            >
+
+                                                Not completed
+
+                                            </div>
+
+                                        {% endif %}
+
+
+                                        <!-- =================================
+                                             START / CONTINUE LESSON
+                                        ================================== -->
+
+                                        <div style="margin-top:15px;">
+
+                                            <a
+                                                href="{% url 'lesson_detail' course.slug lesson.id %}"
+                                                class="primary-btn lesson-btn"
+                                            >
+
+                                                {% if lesson.is_completed %}
+
+                                                    Review Lesson →
+
+                                                {% else %}
+
+                                                    Start Lesson →
+
+                                                {% endif %}
+
+                                            </a>
+
+                                        </div>
+
+
+                                    </div>
+
+                                </div>
+
+                            {% endfor %}
+
+
+                        </div>
+
+
+                    {% else %}
+
+
+                        <!-- =========================================
+                             NO LESSONS
+                        ========================================== -->
+
+                        <div class="empty-state">
+
+                            <div class="empty-icon">
+                                📚
+                            </div>
+
+                            <h3>
+                                Lessons Coming Soon
+                            </h3>
+
+                            <p>
+                                Lessons for this course
+                                have not been added yet.
+                            </p>
+
+                        </div>
+
+
+                    {% endif %}
+
+                </div>
+
+
+            </main>
+
+
+            <!-- =================================================
+                 SIDEBAR
+            ================================================== -->
+
+            <aside class="learning-sidebar">
+
+
+                <!-- =================================================
+                     COURSE DETAILS
+                ================================================== -->
+
+                <div class="learning-side-card">
+
+                    <h3>
+                        Course Details
+                    </h3>
+
+
+                    <div class="detail-row">
+
+                        <span>
+                            Duration
+                        </span>
+
+                        <strong>
+                            {{ course.duration }}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="detail-row">
+
+                        <span>
+                            Level
+                        </span>
+
+                        <strong>
+                            {{ course.level }}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="detail-row">
+
+                        <span>
+                            Instructor
+                        </span>
+
+                        <strong>
+                            {{ course.instructor }}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="detail-row">
+
+                        <span>
+                            Lessons
+                        </span>
+
+                        <strong>
+                            {{ total_lessons }}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="detail-row">
+
+                        <span>
+                            Status
+                        </span>
+
+                        <strong class="active-status">
+                            Enrolled
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+                     REAL PROGRESS
+                ================================================== -->
+
+                <div class="learning-side-card progress-card">
+
+                    <h3>
+                        Your Progress
+                    </h3>
+
+
+                    <!-- PROGRESS PERCENTAGE -->
+
+                    <div
+                        style="
+                            display:flex;
+                            justify-content:space-between;
+                            align-items:center;
+                            margin-top:15px;
+                            margin-bottom:8px;
+                        "
+                    >
+
+                        <span>
+                            Course Progress
+                        </span>
+
+                        <strong>
+                            {{ progress_percentage }}%
+                        </strong>
+
+                    </div>
+
+
+                    <!-- PROGRESS BAR -->
+
+                    <div class="progress-bar">
+
+                        <div
+                            class="progress-fill"
+                            style="width: {{ progress_percentage }}%;"
+                        ></div>
+
+                    </div>
+
+
+                    <!-- LESSON COUNT -->
+
+                    <p>
+
+                        {{ completed_lessons }}
+                        of
+                        {{ total_lessons }}
+                        lesson{{ total_lessons|pluralize }}
+                        completed.
+
+                    </p>
+
+
+                    <!-- PROGRESS MESSAGE -->
+
+                    {% if progress_percentage == 100 %}
+
+                        <p>
+                            🎉 Congratulations! You completed this course.
+                        </p>
+
+                    {% elif completed_lessons > 0 %}
+
+                        <p>
+                            Keep going! Continue with your next lesson.
+                        </p>
+
+                    {% else %}
+
+                        <p>
+                            Start your first lesson to begin
+                            your learning journey.
+                        </p>
+
+                    {% endif %}
+
+                </div>
+
+
+                <!-- =================================================
+                     NEXT LESSON / COURSE COMPLETION
+                ================================================== -->
+
+                {% if next_lesson %}
+
+                    <a
+                        href="{% url 'lesson_detail' course.slug next_lesson.id %}"
+                        class="primary-btn full-width"
+                    >
+                        Continue Learning →
+                    </a>
+
+                {% else %}
+
+                    {% if total_lessons > 0 %}
+
+                        <div
+                            class="learning-side-card"
+                            style="
+                                text-align:center;
+                                margin-top:20px;
+                            "
+                        >
+
+                            <h3>
+                                🎉 Course Completed
+                            </h3>
+
+                            <p>
+                                You have completed all lessons.
+                            </p>
+
+
+                            <!-- =================================================
+                                 CERTIFICATE BUTTON
+                            ================================================== -->
+
+                            {% if certificate %}
+
+                                <a
+                                    href="{% url 'certificate_detail' certificate.certificate_id %}"
+                                    class="primary-btn"
+                                    style="
+                                        display:inline-block;
+                                        margin-top:20px;
+                                        width:100%;
+                                        text-align:center;
+                                    "
+                                >
+                                    🏆 View Certificate
+                                </a>
+
+                            {% endif %}
+
+
+                        </div>
+
+                    {% endif %}
+
+                {% endif %}
+
+
+                <!-- =================================================
+                     BACK TO DASHBOARD
+                ================================================== -->
+
+                <a
+                    href="{% url 'student_dashboard' %}"
+                    class="secondary-btn full-width"
+                    style="margin-top:20px;"
+                >
+                    ← Back to Dashboard
+                </a>
+
+
+            </aside>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}

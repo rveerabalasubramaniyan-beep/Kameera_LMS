@@ -1,0 +1,265 @@
+{% extends "lms/base.html" %}
+
+
+{% block title %}
+    {{ course.title }} | Kameera Technologies
+{% endblock %}
+
+
+{% block content %}
+
+<section class="course-detail-page">
+
+    <div class="course-detail-container">
+
+
+        <!-- =====================================================
+             CATEGORY
+        ====================================================== -->
+
+        <div class="course-category">
+
+            {{ course.category }}
+
+        </div>
+
+
+        <!-- =====================================================
+             COURSE TITLE
+        ====================================================== -->
+
+        <h1>
+            {{ course.title }}
+        </h1>
+
+
+        <!-- =====================================================
+             SHORT DESCRIPTION
+        ====================================================== -->
+
+        {% if course.short_description %}
+
+            <p class="course-subtitle">
+                {{ course.short_description }}
+            </p>
+
+        {% endif %}
+
+
+        <!-- =====================================================
+             COURSE INFORMATION
+        ====================================================== -->
+
+        <div class="course-detail-info">
+
+
+            <!-- DURATION -->
+
+            <div class="detail-box">
+
+                <span>
+                    ⏱ Duration
+                </span>
+
+                <strong>
+                    {{ course.duration }}
+                </strong>
+
+            </div>
+
+
+            <!-- LEVEL -->
+
+            <div class="detail-box">
+
+                <span>
+                    🎓 Level
+                </span>
+
+                <strong>
+                    {{ course.level }}
+                </strong>
+
+            </div>
+
+
+            <!-- INSTRUCTOR -->
+
+            <div class="detail-box">
+
+                <span>
+                    👨‍🏫 Instructor
+                </span>
+
+                <strong>
+                    {{ course.instructor }}
+                </strong>
+
+            </div>
+
+
+            <!-- CATEGORY -->
+
+            <div class="detail-box">
+
+                <span>
+                    📚 Category
+                </span>
+
+                <strong>
+                    {{ course.category }}
+                </strong>
+
+            </div>
+
+
+        </div>
+
+
+        <!-- =====================================================
+             ABOUT COURSE
+        ====================================================== -->
+
+        <div class="course-about">
+
+            <h2>
+                About This Course
+            </h2>
+
+
+            {% if course.description %}
+
+                <p>
+                    {{ course.description }}
+                </p>
+
+            {% else %}
+
+                <p>
+                    Course description will be available soon.
+                </p>
+
+            {% endif %}
+
+        </div>
+
+
+        <!-- =====================================================
+             COURSE ENROLLMENT
+        ====================================================== -->
+
+        <div class="course-enrollment-box">
+
+
+            <!-- COURSE PRICE -->
+
+            <div>
+
+                <span>
+                    Course Fee
+                </span>
+
+                <strong>
+
+                    {% if course.price == 0 %}
+
+                        FREE
+
+                    {% else %}
+
+                        ₹{{ course.price }}
+
+                    {% endif %}
+
+                </strong>
+
+            </div>
+
+
+            <!-- =================================================
+                 USER ACTION
+            ================================================== -->
+
+            {% if user.is_authenticated %}
+
+
+                <!-- =================================================
+                     ALREADY ENROLLED
+                     
+                     enrollment is passed from course_detail view
+                ================================================== -->
+
+                {% if enrollment %}
+
+                    <a
+                        href="{% url 'course_learning' course.slug %}"
+                        class="primary-btn"
+                    >
+                        Continue Learning →
+                    </a>
+
+
+                {% else %}
+
+
+                    <!-- =================================================
+                         NOT ENROLLED
+                    ================================================== -->
+
+                    <a
+                        href="{% url 'enroll_course' course.slug %}"
+                        class="primary-btn"
+                    >
+                        Enroll Now →
+                    </a>
+
+                {% endif %}
+
+
+            {% else %}
+
+
+                <!-- =================================================
+                     NOT LOGGED IN
+                ================================================== -->
+
+                <a
+                    href="{% url 'student_login' %}?next={% url 'course_detail' course.slug %}"
+                    class="primary-btn"
+                >
+                    Login to Enroll →
+                </a>
+
+
+            {% endif %}
+
+
+        </div>
+
+
+        <!-- =====================================================
+             BACK TO COURSES
+        ====================================================== -->
+
+        <div
+            style="
+                margin-top:30px;
+                margin-bottom:40px;
+            "
+        >
+
+            <a
+                href="{% url 'course_list' %}"
+                class="secondary-btn"
+            >
+                ← Back to Courses
+            </a>
+
+        </div>
+
+
+    </div>
+
+</section>
+
+{% endblock %}

@@ -1,0 +1,916 @@
+{% extends "lms/base.html" %}
+
+{% block title %}
+Student Dashboard | Kameera Technologies
+{% endblock %}
+
+
+{% block content %}
+
+<section class="dashboard-page">
+
+    <div class="container">
+
+        <!-- =====================================================
+             DASHBOARD HEADER
+        ====================================================== -->
+
+        <div class="dashboard-header">
+
+            <div class="dashboard-heading">
+
+                <span class="section-label">
+                    KAMEERA LMS
+                </span>
+
+                <h1>
+                    Student Dashboard
+                </h1>
+
+                <p>
+                    Manage your learning journey and access your
+                    enrolled courses.
+                </p>
+
+            </div>
+
+
+            <!-- =================================================
+                 ACCOUNT ACTIONS
+            ================================================== -->
+
+            <div class="dashboard-account-actions">
+
+                <a
+                    href="{% url 'student_profile' %}"
+                    class="profile-btn"
+                >
+                    👤 My Profile
+                </a>
+
+                <a
+                    href="{% url 'student_change_password' %}"
+                    class="password-btn"
+                >
+                    🔐 Change Password
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================================
+             WELCOME MESSAGE
+        ====================================================== -->
+
+        <div class="welcome-card">
+
+            <div class="welcome-content">
+
+                <span class="welcome-label">
+                    WELCOME BACK
+                </span>
+
+                <h2>
+
+                    {% if user.first_name %}
+                        Hello, {{ user.first_name }}!
+                    {% else %}
+                        Hello, {{ user.username }}!
+                    {% endif %}
+
+                </h2>
+
+                <p>
+                    Continue your learning journey with
+                    Kameera Technologies.
+                </p>
+
+            </div>
+
+            <div class="welcome-icon">
+                🎓
+            </div>
+
+        </div>
+
+
+        <!-- =====================================================
+             DASHBOARD SUMMARY
+        ====================================================== -->
+
+        <div class="dashboard-stats">
+
+
+            <!-- ENROLLED COURSES -->
+
+            <div class="dashboard-stat">
+
+                <span class="stat-label">
+                    Enrolled Courses
+                </span>
+
+                <strong class="stat-value">
+                    {{ enrollments|length }}
+                </strong>
+
+            </div>
+
+
+            <!-- PLATFORM -->
+
+            <div class="dashboard-stat">
+
+                <span class="stat-label">
+                    Learning Platform
+                </span>
+
+                <strong class="stat-value">
+                    Kameera LMS
+                </strong>
+
+            </div>
+
+
+            <!-- ACCOUNT -->
+
+            <div class="dashboard-stat">
+
+                <span class="stat-label">
+                    Account
+                </span>
+
+                <strong class="stat-value">
+                    Active
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================================
+             MY PROFILE QUICK ACCESS
+        ====================================================== -->
+
+        <div class="profile-section">
+
+            <div class="profile-section-content">
+
+                <div>
+
+                    <span class="section-label">
+                        ACCOUNT
+                    </span>
+
+                    <h2>
+                        My Profile
+                    </h2>
+
+                    <p>
+                        View or update your personal information
+                        and account security settings.
+                    </p>
+
+                </div>
+
+
+                <div class="profile-actions">
+
+                    <a
+                        href="{% url 'student_profile' %}"
+                        class="primary-btn"
+                    >
+                        View Profile
+                        <span>→</span>
+                    </a>
+
+                    <a
+                        href="{% url 'student_profile_edit' %}"
+                        class="secondary-btn"
+                    >
+                        Edit Profile
+                    </a>
+
+                    <a
+                        href="{% url 'student_change_password' %}"
+                        class="secondary-btn"
+                    >
+                        Change Password
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================================
+             MY COURSES
+        ====================================================== -->
+
+        <div class="dashboard-courses">
+
+            <div class="courses-heading">
+
+                <div>
+
+                    <span class="section-label">
+                        YOUR LEARNING
+                    </span>
+
+                    <h2>
+                        My Courses
+                    </h2>
+
+                </div>
+
+            </div>
+
+
+            {% if enrollments %}
+
+                <div class="my-course-list">
+
+                    {% for enrollment in enrollments %}
+
+                        <article class="my-course-card">
+
+
+                            <!-- COURSE ICON -->
+
+                            <div class="my-course-icon">
+                                📊
+                            </div>
+
+
+                            <!-- COURSE INFORMATION -->
+
+                            <div class="my-course-content">
+
+                                <h3>
+                                    {{ enrollment.course.title }}
+                                </h3>
+
+                                <p>
+                                    {{ enrollment.course.short_description }}
+                                </p>
+
+
+                                <div class="my-course-meta">
+
+                                    <span>
+                                        ⏱
+                                        {{ enrollment.course.duration }}
+                                    </span>
+
+                                    <span>
+                                        🎓
+                                        {{ enrollment.course.level }}
+                                    </span>
+
+
+                                    {% if enrollment.course.category %}
+
+                                        <span>
+                                            📚
+                                            {{ enrollment.course.category }}
+                                        </span>
+
+                                    {% endif %}
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- CONTINUE LEARNING -->
+
+                            <div class="my-course-action">
+
+                                <a
+                                    href="{% url 'course_learning' enrollment.course.slug %}"
+                                    class="primary-btn"
+                                >
+                                    Continue Learning
+                                    <span>→</span>
+                                </a>
+
+                            </div>
+
+
+                        </article>
+
+                    {% endfor %}
+
+                </div>
+
+
+            {% else %}
+
+
+                <!-- =================================================
+                     EMPTY COURSE STATE
+                ================================================== -->
+
+                <div class="empty-state">
+
+                    <div class="empty-icon">
+                        📚
+                    </div>
+
+                    <h2>
+                        No Enrolled Courses
+                    </h2>
+
+                    <p>
+                        You haven't enrolled in any courses yet.
+                        Explore our available courses and start
+                        learning today.
+                    </p>
+
+                    <a
+                        href="{% url 'course_list' %}"
+                        class="primary-btn"
+                    >
+                        Explore Courses
+                        <span>→</span>
+                    </a>
+
+                </div>
+
+
+            {% endif %}
+
+
+        </div>
+
+
+        <!-- =====================================================
+             MY CERTIFICATES
+        ====================================================== -->
+
+        <div class="dashboard-certificates">
+
+
+            <!-- SECTION HEADING -->
+
+            <div class="courses-heading">
+
+                <div>
+
+                    <span class="section-label">
+                        YOUR ACHIEVEMENTS
+                    </span>
+
+                    <h2>
+                        My Certificates
+                    </h2>
+
+                </div>
+
+            </div>
+
+
+            {% if enrollments %}
+
+
+                <div class="certificate-list">
+
+
+                    {% for enrollment in enrollments %}
+
+
+                        {% if enrollment.certificate %}
+
+
+                            <!-- =====================================
+                                 CERTIFICATE CARD
+                            ====================================== -->
+
+                            <article class="certificate-card">
+
+
+                                <!-- CERTIFICATE ICON -->
+
+                                <div class="certificate-card-icon">
+                                    🏆
+                                </div>
+
+
+                                <!-- CERTIFICATE INFORMATION -->
+
+                                <div class="certificate-card-content">
+
+                                    <h3>
+                                        {{ enrollment.course.title }}
+                                    </h3>
+
+                                    <p class="certificate-status">
+                                        Certificate of Completion
+                                    </p>
+
+
+                                    <div class="certificate-meta">
+
+                                        <span>
+
+                                            <strong>
+                                                Certificate ID:
+                                            </strong>
+
+                                            {{ enrollment.certificate.certificate_id }}
+
+                                        </span>
+
+
+                                        <span>
+
+                                            <strong>
+                                                Completed:
+                                            </strong>
+
+                                            {{ enrollment.certificate.issued_at|date:"d M Y" }}
+
+                                        </span>
+
+                                    </div>
+
+                                </div>
+
+
+                                <!-- VIEW CERTIFICATE -->
+
+                                <div class="certificate-card-action">
+
+                                    <a
+                                        href="{% url 'certificate_detail' enrollment.certificate.certificate_id %}"
+                                        class="primary-btn"
+                                    >
+                                        🏆 View Certificate
+                                        <span>
+                                            →
+                                        </span>
+                                    </a>
+
+                                </div>
+
+
+                            </article>
+
+
+                        {% endif %}
+
+
+                    {% endfor %}
+
+
+                </div>
+
+
+            {% else %}
+
+
+                <!-- =================================================
+                     EMPTY CERTIFICATE STATE
+                ================================================== -->
+
+                <div class="empty-state certificate-empty-state">
+
+                    <div class="empty-icon">
+                        🏆
+                    </div>
+
+                    <h2>
+                        No Certificates Yet
+                    </h2>
+
+                    <p>
+                        Complete a course to earn your first
+                        Kameera Technologies certificate.
+                    </p>
+
+                    <a
+                        href="{% url 'course_list' %}"
+                        class="primary-btn"
+                    >
+                        Explore Courses
+
+                        <span>
+                            →
+                        </span>
+
+                    </a>
+
+                </div>
+
+
+            {% endif %}
+
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+<!-- ============================================================
+     DASHBOARD / PROFILE / CERTIFICATE STYLES
+============================================================= -->
+
+<style>
+
+/* ============================================================
+   DASHBOARD HEADER
+============================================================ */
+
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 30px;
+    margin-bottom: 35px;
+}
+
+
+/* ============================================================
+   ACCOUNT ACTIONS
+============================================================ */
+
+.dashboard-account-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+.profile-btn,
+.password-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 11px 17px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 700;
+    transition: all 0.2s ease;
+}
+
+.profile-btn {
+    background: #2864d7;
+    color: #ffffff;
+}
+
+.profile-btn:hover {
+    background: #1d52b5;
+    color: #ffffff;
+    transform: translateY(-1px);
+}
+
+.password-btn {
+    background: #ffffff;
+    color: #2864d7;
+    border: 1px solid #2864d7;
+}
+
+.password-btn:hover {
+    background: #f1f6ff;
+    color: #2864d7;
+}
+
+
+/* ============================================================
+   WELCOME CARD
+============================================================ */
+
+.welcome-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 30px;
+    padding: 30px 35px;
+    margin-bottom: 30px;
+    background: #ffffff;
+    border: 1px solid #e5ebf5;
+    border-radius: 22px;
+    box-shadow: 0 10px 30px rgba(20, 50, 100, 0.06);
+}
+
+.welcome-label {
+    color: #2864d7;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 2px;
+}
+
+.welcome-card h2 {
+    margin: 7px 0;
+    color: #162d52;
+    font-size: 27px;
+}
+
+.welcome-card p {
+    margin: 0;
+    color: #61728d;
+}
+
+.welcome-icon {
+    width: 70px;
+    height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f1f6ff;
+    border-radius: 18px;
+    font-size: 35px;
+}
+
+
+/* ============================================================
+   PROFILE QUICK ACCESS
+============================================================ */
+
+.profile-section {
+    margin-top: 35px;
+    margin-bottom: 55px;
+}
+
+.profile-section-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 30px;
+    background: #ffffff;
+    border: 1px solid #e5ebf5;
+    border-radius: 22px;
+    padding: 28px 32px;
+    box-shadow: 0 10px 30px rgba(20, 50, 100, 0.06);
+}
+
+.profile-section h2 {
+    margin: 6px 0 8px;
+    color: #162d52;
+    font-size: 24px;
+}
+
+.profile-section p {
+    margin: 0;
+    color: #61728d;
+}
+
+.profile-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+.secondary-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 11px 16px;
+    border-radius: 10px;
+    background: #ffffff;
+    border: 1px solid #d8e1ef;
+    color: #2864d7;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 700;
+    transition: all 0.2s ease;
+}
+
+.secondary-btn:hover {
+    background: #f1f6ff;
+    border-color: #2864d7;
+    color: #2864d7;
+}
+
+
+/* ============================================================
+   MY CERTIFICATES
+============================================================ */
+
+.dashboard-certificates {
+    margin-top: 70px;
+    padding-bottom: 80px;
+}
+
+
+/* ============================================================
+   CERTIFICATE LIST
+============================================================ */
+
+.certificate-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+
+/* ============================================================
+   CERTIFICATE CARD
+============================================================ */
+
+.certificate-card {
+    display: grid;
+    grid-template-columns: 80px 1fr auto;
+    align-items: center;
+    gap: 25px;
+    background: #ffffff;
+    padding: 30px 32px;
+    border-radius: 22px;
+    border: 1px solid #e5ebf5;
+    box-shadow:
+        0 10px 30px rgba(20, 50, 100, 0.08);
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.certificate-card:hover {
+    transform: translateY(-3px);
+    box-shadow:
+        0 15px 35px rgba(20, 50, 100, 0.13);
+}
+
+
+/* ============================================================
+   CERTIFICATE ICON
+============================================================ */
+
+.certificate-card-icon {
+    width: 68px;
+    height: 68px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f1f6ff;
+    border-radius: 18px;
+    font-size: 34px;
+}
+
+
+/* ============================================================
+   CERTIFICATE CONTENT
+============================================================ */
+
+.certificate-card-content h3 {
+    margin: 0 0 8px;
+    font-size: 22px;
+    font-weight: 700;
+    color: #162d52;
+}
+
+.certificate-status {
+    margin: 0 0 15px;
+    color: #1f4fa3;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+
+/* ============================================================
+   CERTIFICATE META
+============================================================ */
+
+.certificate-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 25px;
+    color: #61728d;
+    font-size: 14px;
+}
+
+.certificate-meta strong {
+    color: #162d52;
+}
+
+
+/* ============================================================
+   CERTIFICATE BUTTON
+============================================================ */
+
+.certificate-card-action {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.certificate-card-action .primary-btn {
+    white-space: nowrap;
+}
+
+
+/* ============================================================
+   EMPTY CERTIFICATE STATE
+============================================================ */
+
+.certificate-empty-state {
+    margin-top: 10px;
+}
+
+
+/* ============================================================
+   MOBILE RESPONSIVE
+============================================================ */
+
+@media screen and (max-width: 900px) {
+
+    .dashboard-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .dashboard-account-actions {
+        justify-content: flex-start;
+    }
+
+    .profile-section-content {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .profile-actions {
+        justify-content: flex-start;
+    }
+
+}
+
+
+@media screen and (max-width: 768px) {
+
+    .welcome-card {
+        padding: 25px 20px;
+    }
+
+    .welcome-icon {
+        display: none;
+    }
+
+    .dashboard-certificates {
+        margin-top: 50px;
+    }
+
+    .certificate-card {
+        grid-template-columns: 1fr;
+        text-align: center;
+        padding: 25px 20px;
+    }
+
+    .certificate-card-icon {
+        margin: 0 auto;
+    }
+
+    .certificate-meta {
+        justify-content: center;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .certificate-card-action {
+        justify-content: center;
+        margin-top: 5px;
+    }
+
+    .certificate-card-action .primary-btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .profile-actions {
+        width: 100%;
+        flex-direction: column;
+    }
+
+    .profile-actions a {
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+}
+
+
+@media screen and (max-width: 500px) {
+
+    .dashboard-account-actions {
+        width: 100%;
+        flex-direction: column;
+    }
+
+    .dashboard-account-actions a {
+        width: 100%;
+        justify-content: center;
+        box-sizing: border-box;
+    }
+
+}
+
+</style>
+
+
+{% endblock %}

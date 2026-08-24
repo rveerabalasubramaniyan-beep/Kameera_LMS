@@ -1,0 +1,711 @@
+{% extends "lms/base.html" %}
+
+{% block title %}
+Admin Dashboard | Kameera Technologies
+{% endblock %}
+
+
+{% block content %}
+
+<style>
+
+    .admin-page {
+        padding: 50px 0 80px;
+        background: #f5f8ff;
+        min-height: 80vh;
+    }
+
+
+    .admin-header {
+        margin-bottom: 35px;
+    }
+
+
+    .admin-header h1 {
+        margin: 8px 0;
+        font-size: 36px;
+        color: #14213d;
+    }
+
+
+    .admin-header p {
+        color: #5f6b7a;
+        font-size: 17px;
+    }
+
+
+    .admin-label {
+        color: #2864d7;
+        font-weight: 700;
+        letter-spacing: 2px;
+        font-size: 13px;
+    }
+
+
+    /* =====================================================
+       STAT CARDS
+    ===================================================== */
+
+    .admin-stats {
+        display: grid;
+        grid-template-columns:
+            repeat(4, minmax(0, 1fr));
+
+        gap: 22px;
+        margin-bottom: 40px;
+    }
+
+
+    .admin-stat-card {
+        background: white;
+        border-radius: 18px;
+        padding: 28px;
+
+        box-shadow:
+            0 8px 25px rgba(0, 0, 0, 0.06);
+
+        border: 1px solid #e7ecf5;
+    }
+
+
+    .admin-stat-icon {
+        font-size: 30px;
+        margin-bottom: 15px;
+    }
+
+
+    .admin-stat-label {
+        display: block;
+        color: #687386;
+        font-size: 14px;
+        margin-bottom: 8px;
+    }
+
+
+    .admin-stat-value {
+        display: block;
+        font-size: 32px;
+        color: #17366f;
+        font-weight: 800;
+    }
+
+
+    .manage-link {
+        display: inline-block;
+        margin-top: 15px;
+        color: #2459b8;
+        font-weight: 700;
+        text-decoration: none;
+    }
+
+
+    .manage-link:hover {
+        text-decoration: underline;
+    }
+
+
+    /* =====================================================
+       SECTION
+    ===================================================== */
+
+    .admin-section {
+        background: white;
+        border-radius: 18px;
+        padding: 30px;
+        margin-bottom: 30px;
+
+        box-shadow:
+            0 8px 25px rgba(0, 0, 0, 0.05);
+
+        border: 1px solid #e7ecf5;
+    }
+
+
+    .admin-section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        gap: 15px;
+        margin-bottom: 25px;
+    }
+
+
+    .admin-section-header h2 {
+        margin: 0;
+        color: #14213d;
+        font-size: 24px;
+    }
+
+
+    /* =====================================================
+       TABLE
+    ===================================================== */
+
+    .admin-table-wrapper {
+        overflow-x: auto;
+    }
+
+
+    .admin-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+
+    .admin-table th {
+        text-align: left;
+        padding: 14px;
+
+        background: #f5f8ff;
+        color: #17366f;
+        font-size: 14px;
+    }
+
+
+    .admin-table td {
+        padding: 16px 14px;
+        border-bottom: 1px solid #edf0f5;
+        color: #39445a;
+    }
+
+
+    .admin-table tr:last-child td {
+        border-bottom: none;
+    }
+
+
+    /* =====================================================
+       BADGES
+    ===================================================== */
+
+    .admin-badge {
+        display: inline-block;
+
+        padding: 6px 12px;
+
+        border-radius: 20px;
+
+        background: #e9f1ff;
+        color: #1e55b3;
+
+        font-size: 13px;
+        font-weight: 700;
+    }
+
+
+    .certificate-badge {
+        background: #fff5d9;
+        color: #9a7000;
+    }
+
+
+    /* =====================================================
+       EMPTY STATE
+    ===================================================== */
+
+    .admin-empty {
+        padding: 30px;
+        text-align: center;
+
+        color: #737d8d;
+
+        background: #f8faff;
+
+        border-radius: 12px;
+    }
+
+
+    /* =====================================================
+       RESPONSIVE
+    ===================================================== */
+
+    @media (max-width: 1000px) {
+
+        .admin-stats {
+            grid-template-columns:
+                repeat(2, minmax(0, 1fr));
+        }
+
+    }
+
+
+    @media (max-width: 600px) {
+
+        .admin-page {
+            padding: 30px 0 50px;
+        }
+
+
+        .admin-header h1 {
+            font-size: 28px;
+        }
+
+
+        .admin-stats {
+            grid-template-columns: 1fr;
+        }
+
+
+        .admin-section {
+            padding: 20px;
+        }
+
+    }
+
+</style>
+
+
+<section class="admin-page">
+
+    <div class="container">
+
+
+        <!-- =================================================
+             HEADER
+        ================================================== -->
+
+        <div class="admin-header">
+
+            <span class="admin-label">
+                KAMEERA TECHNOLOGIES
+            </span>
+
+
+            <h1>
+                Admin Dashboard
+            </h1>
+
+
+            <p>
+                Manage your LMS, students, courses and
+                certificates from one place.
+            </p>
+
+        </div>
+
+
+        <!-- =================================================
+             SUMMARY CARDS
+        ================================================== -->
+
+        <div class="admin-stats">
+
+
+            <!-- STUDENTS -->
+
+            <div class="admin-stat-card">
+
+                <div class="admin-stat-icon">
+                    👥
+                </div>
+
+
+                <span class="admin-stat-label">
+                    Total Students
+                </span>
+
+
+                <strong class="admin-stat-value">
+                    {{ total_students }}
+                </strong>
+
+
+                <a
+                    href="{% url 'admin_student_management' %}"
+                    class="manage-link"
+                >
+                    Manage Students →
+                </a>
+
+            </div>
+
+
+            <!-- COURSES -->
+
+            <div class="admin-stat-card">
+
+                <div class="admin-stat-icon">
+                    📚
+                </div>
+
+
+                <span class="admin-stat-label">
+                    Active Courses
+                </span>
+
+
+                <strong class="admin-stat-value">
+                    {{ total_courses }}
+                </strong>
+
+
+                <a
+                    href="{% url 'admin_course_management' %}"
+                    class="manage-link"
+                >
+                    Manage Courses →
+                </a>
+
+            </div>
+
+
+            <!-- ENROLLMENTS -->
+
+            <div class="admin-stat-card">
+
+                <div class="admin-stat-icon">
+                    📝
+                </div>
+
+
+                <span class="admin-stat-label">
+                    Enrollments
+                </span>
+
+
+                <strong class="admin-stat-value">
+                    {{ total_enrollments }}
+                </strong>
+
+            </div>
+
+
+            <!-- CERTIFICATES -->
+
+            <div class="admin-stat-card">
+
+                <div class="admin-stat-icon">
+                    🎓
+                </div>
+
+
+                <span class="admin-stat-label">
+                    Certificates Issued
+                </span>
+
+
+                <strong class="admin-stat-value">
+                    {{ total_certificates }}
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             RECENT ENROLLMENTS
+        ================================================== -->
+
+        <div class="admin-section">
+
+            <div class="admin-section-header">
+
+                <h2>
+                    Recent Enrollments
+                </h2>
+
+            </div>
+
+
+            {% if recent_enrollments %}
+
+                <div class="admin-table-wrapper">
+
+                    <table class="admin-table">
+
+                        <thead>
+
+                            <tr>
+
+                                <th>
+                                    Student
+                                </th>
+
+                                <th>
+                                    Course
+                                </th>
+
+                                <th>
+                                    Enrolled
+                                </th>
+
+                                <th>
+                                    Status
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody>
+
+                            {% for enrollment in recent_enrollments %}
+
+                                <tr>
+
+                                    <td>
+                                        {{ enrollment.user.username }}
+                                    </td>
+
+
+                                    <td>
+                                        {{ enrollment.course.title }}
+                                    </td>
+
+
+                                    <td>
+                                        {{ enrollment.enrolled_at|date:"d M Y" }}
+                                    </td>
+
+
+                                    <td>
+
+                                        {% if enrollment.is_active %}
+
+                                            <span class="admin-badge">
+                                                Active
+                                            </span>
+
+                                        {% else %}
+
+                                            <span class="admin-badge">
+                                                Inactive
+                                            </span>
+
+                                        {% endif %}
+
+                                    </td>
+
+                                </tr>
+
+                            {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            {% else %}
+
+                <div class="admin-empty">
+                    No enrollments found.
+                </div>
+
+            {% endif %}
+
+        </div>
+
+
+        <!-- =================================================
+             RECENT COURSES
+        ================================================== -->
+
+        <div class="admin-section">
+
+            <div class="admin-section-header">
+
+                <h2>
+                    Recent Courses
+                </h2>
+
+            </div>
+
+
+            {% if recent_courses %}
+
+                <div class="admin-table-wrapper">
+
+                    <table class="admin-table">
+
+                        <thead>
+
+                            <tr>
+
+                                <th>
+                                    Course
+                                </th>
+
+                                <th>
+                                    Category
+                                </th>
+
+                                <th>
+                                    Level
+                                </th>
+
+                                <th>
+                                    Status
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody>
+
+                            {% for course in recent_courses %}
+
+                                <tr>
+
+                                    <td>
+                                        {{ course.title }}
+                                    </td>
+
+
+                                    <td>
+                                        {{ course.category }}
+                                    </td>
+
+
+                                    <td>
+                                        {{ course.level }}
+                                    </td>
+
+
+                                    <td>
+
+                                        {% if course.is_active %}
+
+                                            <span class="admin-badge">
+                                                Active
+                                            </span>
+
+                                        {% else %}
+
+                                            <span class="admin-badge">
+                                                Inactive
+                                            </span>
+
+                                        {% endif %}
+
+                                    </td>
+
+                                </tr>
+
+                            {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            {% else %}
+
+                <div class="admin-empty">
+                    No courses found.
+                </div>
+
+            {% endif %}
+
+        </div>
+
+
+        <!-- =================================================
+             RECENT CERTIFICATES
+        ================================================== -->
+
+        <div class="admin-section">
+
+            <div class="admin-section-header">
+
+                <h2>
+                    Recently Issued Certificates
+                </h2>
+
+            </div>
+
+
+            {% if recent_certificates %}
+
+                <div class="admin-table-wrapper">
+
+                    <table class="admin-table">
+
+                        <thead>
+
+                            <tr>
+
+                                <th>
+                                    Student
+                                </th>
+
+                                <th>
+                                    Course
+                                </th>
+
+                                <th>
+                                    Certificate ID
+                                </th>
+
+                                <th>
+                                    Issued
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody>
+
+                            {% for certificate in recent_certificates %}
+
+                                <tr>
+
+                                    <td>
+                                        {{ certificate.user.username }}
+                                    </td>
+
+
+                                    <td>
+                                        {{ certificate.course.title }}
+                                    </td>
+
+
+                                    <td>
+
+                                        <span
+                                            class="admin-badge certificate-badge"
+                                        >
+                                            {{ certificate.certificate_id }}
+                                        </span>
+
+                                    </td>
+
+
+                                    <td>
+                                        {{ certificate.issued_at|date:"d M Y" }}
+                                    </td>
+
+                                </tr>
+
+                            {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            {% else %}
+
+                <div class="admin-empty">
+                    No certificates issued yet.
+                </div>
+
+            {% endif %}
+
+        </div>
+
+
+    </div>
+
+</section>
+
+{% endblock %}

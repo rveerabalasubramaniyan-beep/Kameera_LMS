@@ -1,0 +1,386 @@
+{% extends "lms/base.html" %}
+
+{% block title %}
+Certificate | Kameera Technologies
+{% endblock %}
+
+{% block content %}
+
+<style>
+
+    .certificate-page {
+        padding: 50px 20px;
+        background: #f5f8ff;
+        min-height: 80vh;
+    }
+
+    .certificate-container {
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+
+    .certificate {
+        position: relative;
+        background: white;
+        border: 8px solid #174ea6;
+        padding: 12px;
+        box-shadow: 0 10px 35px rgba(0,0,0,0.12);
+    }
+
+    .certificate-inner {
+        border: 3px solid #d4af37;
+        padding: 60px 50px;
+        text-align: center;
+        min-height: 650px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        position: relative;
+    }
+
+    .certificate-logo {
+        font-size: 38px;
+        font-weight: 800;
+        letter-spacing: 5px;
+        color: #174ea6;
+        margin-bottom: 5px;
+    }
+
+    .certificate-subtitle {
+        color: #174ea6;
+        letter-spacing: 6px;
+        font-size: 14px;
+        margin-bottom: 35px;
+    }
+
+    .certificate-title {
+        font-size: 48px;
+        font-weight: 800;
+        color: #14213d;
+        margin: 10px 0 30px;
+    }
+
+    .certificate-text {
+        font-size: 18px;
+        color: #444;
+        line-height: 1.7;
+        max-width: 750px;
+        margin: 0 auto 35px;
+    }
+
+    .student-name {
+        font-size: 36px;
+        font-weight: 700;
+        color: #174ea6;
+        margin: 20px 0;
+    }
+
+    .course-name {
+        font-size: 30px;
+        font-weight: 700;
+        color: #14213d;
+        margin: 15px 0 35px;
+    }
+
+    .certificate-details {
+        display: flex;
+        justify-content: center;
+        gap: 100px;
+        margin-top: 30px;
+    }
+
+    .certificate-detail {
+        text-align: center;
+    }
+
+    .certificate-detail strong {
+        display: block;
+        font-size: 16px;
+        color: #174ea6;
+        margin-bottom: 8px;
+    }
+
+    .certificate-detail span {
+        font-size: 17px;
+        color: #333;
+    }
+
+    .signature {
+        margin-top: 50px;
+    }
+
+    .signature-line {
+        width: 220px;
+        border-top: 1px solid #333;
+        margin: 0 auto 8px;
+    }
+
+    .signature-name {
+        font-weight: 700;
+        color: #174ea6;
+    }
+
+    .certificate-actions {
+        text-align: center;
+        margin-top: 30px;
+    }
+
+    .print-btn {
+        display: inline-block;
+        background: #174ea6;
+        color: white;
+        padding: 14px 30px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 700;
+        border: none;
+        cursor: pointer;
+        font-size: 16px;
+    }
+
+    .back-btn {
+        display: inline-block;
+        margin-left: 10px;
+        padding: 14px 30px;
+        border: 2px solid #174ea6;
+        color: #174ea6;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 700;
+    }
+
+    @media (max-width: 700px) {
+
+        .certificate-inner {
+            padding: 40px 20px;
+        }
+
+        .certificate-title {
+            font-size: 34px;
+        }
+
+        .student-name {
+            font-size: 28px;
+        }
+
+        .course-name {
+            font-size: 23px;
+        }
+
+        .certificate-details {
+            flex-direction: column;
+            gap: 25px;
+        }
+
+    }
+
+
+    /* =========================================================
+       PRINT
+    ========================================================= */
+
+    @media print {
+
+        body * {
+            visibility: hidden;
+        }
+
+        .certificate,
+        .certificate * {
+            visibility: visible;
+        }
+
+        .certificate {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            box-shadow: none;
+            border: 8px solid #174ea6;
+        }
+
+        .certificate-actions {
+            display: none;
+        }
+
+        .certificate-page {
+            padding: 0;
+            background: white;
+        }
+
+    }
+
+</style>
+
+
+<section class="certificate-page">
+
+    <div class="certificate-container">
+
+
+        <!-- =====================================================
+             CERTIFICATE
+        ====================================================== -->
+
+        <div class="certificate">
+
+            <div class="certificate-inner">
+
+
+                <!-- LOGO -->
+
+                <div class="certificate-logo">
+                    KAMEERA
+                </div>
+
+                <div class="certificate-subtitle">
+                    TECHNOLOGIES
+                </div>
+
+
+                <!-- TITLE -->
+
+                <div class="certificate-title">
+                    CERTIFICATE OF COMPLETION
+                </div>
+
+
+                <!-- DESCRIPTION -->
+
+                <div class="certificate-text">
+
+                    This certificate is proudly presented to
+
+                </div>
+
+
+                <!-- STUDENT NAME -->
+
+                <div class="student-name">
+
+                    {{ certificate.user.get_full_name|default:certificate.user.username }}
+
+                </div>
+
+
+                <div class="certificate-text">
+
+                    for successfully completing all required
+                    lessons and learning content for the course
+
+                </div>
+
+
+                <!-- COURSE -->
+
+                <div class="course-name">
+
+                    {{ certificate.course.title }}
+
+                </div>
+
+
+                <!-- DETAILS -->
+
+                <div class="certificate-details">
+
+
+                    <!-- CERTIFICATE ID -->
+
+                    <div class="certificate-detail">
+
+                        <strong>
+                            Certificate ID
+                        </strong>
+
+                        <span>
+                            {{ certificate.certificate_id }}
+                        </span>
+
+                    </div>
+
+
+                    <!-- DATE -->
+
+                    <div class="certificate-detail">
+
+                        <strong>
+                            Date of Completion
+                        </strong>
+
+                        <span>
+                            {{ certificate.issued_at|date:"d M Y" }}
+                        </span>
+
+                    </div>
+
+
+                    <!-- INSTRUCTOR -->
+
+                    <div class="certificate-detail">
+
+                        <strong>
+                            Instructor
+                        </strong>
+
+                        <span>
+                            {{ certificate.course.instructor }}
+                        </span>
+
+                    </div>
+
+
+                </div>
+
+
+                <!-- SIGNATURE -->
+
+                <div class="signature">
+
+                    <div class="signature-line"></div>
+
+                    <div class="signature-name">
+                        Kameera Technologies
+                    </div>
+
+                    <div>
+                        Authorized Certification
+                    </div>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================================
+             ACTION BUTTONS
+        ====================================================== -->
+
+        <div class="certificate-actions">
+
+            <button
+                onclick="window.print()"
+                class="print-btn"
+            >
+                🖨 Print / Save as PDF
+            </button>
+
+
+            <a
+                href="{% url 'course_learning' certificate.course.slug %}"
+                class="back-btn"
+            >
+                ← Back to Course
+            </a>
+
+        </div>
+
+
+    </div>
+
+</section>
+
+{% endblock %}

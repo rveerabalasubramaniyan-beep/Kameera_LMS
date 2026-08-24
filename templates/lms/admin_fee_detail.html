@@ -1,0 +1,984 @@
+{% extends "lms/base.html" %}
+
+{% block title %}
+Fee Details | Kameera Technologies
+{% endblock %}
+
+
+{% block content %}
+
+<style>
+
+/* ============================================================
+   PAGE
+============================================================ */
+
+.fee-detail-page {
+    background: #f4f7ff;
+    min-height: 80vh;
+    padding: 50px 0 80px;
+}
+
+.fee-detail-container {
+    max-width: 1150px;
+    margin: 0 auto;
+    padding: 0 25px;
+}
+
+
+/* ============================================================
+   HEADER
+============================================================ */
+
+.fee-header {
+    margin-bottom: 30px;
+}
+
+.fee-label {
+    display: block;
+    color: #2864d7;
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+}
+
+.fee-header h1 {
+    color: #14213d;
+    font-size: 36px;
+    margin: 0 0 8px;
+}
+
+.fee-header p {
+    color: #687386;
+    margin: 0;
+    font-size: 16px;
+}
+
+
+/* ============================================================
+   CARD
+============================================================ */
+
+.fee-card {
+    background: #ffffff;
+    border-radius: 18px;
+    padding: 30px;
+    margin-bottom: 25px;
+    border: 1px solid #e5eaf3;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.05);
+}
+
+.fee-card h2 {
+    color: #14213d;
+    margin-top: 0;
+    margin-bottom: 22px;
+    font-size: 24px;
+}
+
+
+/* ============================================================
+   STUDENT INFO
+============================================================ */
+
+.student-info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+}
+
+.info-box {
+    background: #f7f9fd;
+    border-radius: 12px;
+    padding: 18px;
+}
+
+.info-box span {
+    display: block;
+    color: #687386;
+    font-size: 13px;
+    margin-bottom: 7px;
+}
+
+.info-box strong {
+    color: #14213d;
+    font-size: 16px;
+}
+
+
+/* ============================================================
+   FINANCIAL SUMMARY
+============================================================ */
+
+.finance-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.finance-box {
+    background: #f7f9fd;
+    border-radius: 14px;
+    padding: 20px;
+    border: 1px solid #e8edf5;
+}
+
+.finance-box span {
+    display: block;
+    color: #687386;
+    font-size: 13px;
+    margin-bottom: 8px;
+}
+
+.finance-box strong {
+    display: block;
+    color: #17366f;
+    font-size: 22px;
+}
+
+
+/* ============================================================
+   STATUS BADGES
+============================================================ */
+
+.status-badge {
+    display: inline-block;
+    padding: 7px 13px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 800;
+}
+
+.status-paid {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+.status-partial {
+    background: #fff5d9;
+    color: #9a7000;
+}
+
+.status-pending {
+    background: #fee2e2;
+    color: #b91c1c;
+}
+
+.status-active {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+.status-inactive {
+    background: #fee2e2;
+    color: #b91c1c;
+}
+
+
+/* ============================================================
+   PAYMENT ACTIONS
+============================================================ */
+
+.action-area {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.action-description {
+    color: #687386;
+    margin: 0;
+}
+
+.primary-button {
+    display: inline-block;
+    padding: 12px 20px;
+    background: #2864d7;
+    color: white;
+    text-decoration: none;
+    border-radius: 10px;
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+}
+
+.primary-button:hover {
+    background: #1d52b5;
+    color: white;
+}
+
+.success-button {
+    display: inline-block;
+    padding: 12px 20px;
+    background: #15803d;
+    color: white;
+    text-decoration: none;
+    border-radius: 10px;
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+}
+
+.success-button:hover {
+    background: #11652f;
+    color: white;
+}
+
+.danger-button {
+    display: inline-block;
+    padding: 12px 20px;
+    background: #dc2626;
+    color: white;
+    text-decoration: none;
+    border-radius: 10px;
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+}
+
+.danger-button:hover {
+    background: #b91c1c;
+    color: white;
+}
+
+.disabled-button {
+    display: inline-block;
+    padding: 12px 20px;
+    background: #e8edf5;
+    color: #7a8495;
+    border-radius: 10px;
+    font-weight: 700;
+}
+
+
+/* ============================================================
+   ENROLLMENT ACCESS
+============================================================ */
+
+.enrollment-card {
+    border-left: 5px solid #2864d7;
+}
+
+.enrollment-status-box {
+    background: #f7f9fd;
+    border-radius: 14px;
+    padding: 22px;
+    margin-bottom: 20px;
+}
+
+.enrollment-status-title {
+    color: #14213d;
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.enrollment-status-description {
+    color: #687386;
+    margin: 12px 0 0;
+    line-height: 1.6;
+}
+
+.enrollment-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+
+/* ============================================================
+   PAYMENT TABLE
+============================================================ */
+
+.table-wrapper {
+    overflow-x: auto;
+}
+
+.payment-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.payment-table th {
+    text-align: left;
+    padding: 14px;
+    background: #f5f8ff;
+    color: #17366f;
+    font-size: 14px;
+    white-space: nowrap;
+}
+
+.payment-table td {
+    padding: 15px 14px;
+    border-bottom: 1px solid #edf0f5;
+    color: #39445a;
+}
+
+.payment-table td strong {
+    color: #14213d;
+}
+
+
+/* ============================================================
+   EMPTY STATE
+============================================================ */
+
+.empty-state {
+    padding: 35px;
+    text-align: center;
+    color: #737d8d;
+    background: #f8faff;
+    border-radius: 12px;
+}
+
+.empty-state-icon {
+    font-size: 38px;
+    margin-bottom: 10px;
+}
+
+
+/* ============================================================
+   ENROLLMENT INFORMATION
+============================================================ */
+
+.access-warning {
+    background: #fff7ed;
+    border: 1px solid #fed7aa;
+    color: #9a3412;
+    padding: 16px 18px;
+    border-radius: 12px;
+    margin-top: 18px;
+    line-height: 1.6;
+}
+
+.access-success {
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    color: #166534;
+    padding: 16px 18px;
+    border-radius: 12px;
+    margin-top: 18px;
+    line-height: 1.6;
+}
+
+
+/* ============================================================
+   BACK
+============================================================ */
+
+.back-button {
+    display: inline-block;
+    padding: 12px 20px;
+    border: 1px solid #2864d7;
+    border-radius: 10px;
+    color: #2459b8;
+    text-decoration: none;
+    font-weight: 700;
+    background: white;
+}
+
+.back-button:hover {
+    background: #f0f5ff;
+}
+
+
+/* ============================================================
+   RESPONSIVE
+============================================================ */
+
+@media (max-width: 900px) {
+
+    .finance-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+}
+
+
+@media (max-width: 700px) {
+
+    .student-info-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .finance-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .fee-card {
+        padding: 20px;
+    }
+
+    .fee-header h1 {
+        font-size: 30px;
+    }
+
+}
+
+</style>
+
+
+<section class="fee-detail-page">
+
+    <div class="fee-detail-container">
+
+
+        <!-- =====================================================
+             HEADER
+        ====================================================== -->
+
+        <div class="fee-header">
+
+            <span class="fee-label">
+                KAMEERA TECHNOLOGIES
+            </span>
+
+            <h1>
+                Fee Details
+            </h1>
+
+            <p>
+                View fee information, payment history,
+                and course access status.
+            </p>
+
+        </div>
+
+
+        <!-- =====================================================
+             STUDENT & COURSE INFORMATION
+        ====================================================== -->
+
+        <div class="fee-card">
+
+            <h2>
+                Student & Course
+            </h2>
+
+            <div class="student-info-grid">
+
+                <div class="info-box">
+
+                    <span>
+                        Student
+                    </span>
+
+                    <strong>
+
+                        {% if fee.student.get_full_name %}
+
+                            {{ fee.student.get_full_name }}
+
+                        {% else %}
+
+                            {{ fee.student.username }}
+
+                        {% endif %}
+
+                    </strong>
+
+                </div>
+
+
+                <div class="info-box">
+
+                    <span>
+                        Username
+                    </span>
+
+                    <strong>
+                        {{ fee.student.username }}
+                    </strong>
+
+                </div>
+
+
+                <div class="info-box">
+
+                    <span>
+                        Email
+                    </span>
+
+                    <strong>
+                        {{ fee.student.email|default:"-" }}
+                    </strong>
+
+                </div>
+
+
+                <div class="info-box">
+
+                    <span>
+                        Course
+                    </span>
+
+                    <strong>
+                        {{ fee.course.title }}
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================================
+             FINANCIAL SUMMARY
+        ====================================================== -->
+
+        <div class="fee-card">
+
+            <h2>
+                Fee Summary
+            </h2>
+
+            <div class="finance-grid">
+
+                <div class="finance-box">
+
+                    <span>
+                        Course Fee
+                    </span>
+
+                    <strong>
+                        ₹{{ fee.course_fee|floatformat:2 }}
+                    </strong>
+
+                </div>
+
+
+                <div class="finance-box">
+
+                    <span>
+                        Discount
+                    </span>
+
+                    <strong>
+                        ₹{{ fee.discount|floatformat:2 }}
+                    </strong>
+
+                </div>
+
+
+                <div class="finance-box">
+
+                    <span>
+                        Amount Paid
+                    </span>
+
+                    <strong>
+                        ₹{{ fee.paid_amount|floatformat:2 }}
+                    </strong>
+
+                </div>
+
+
+                <div class="finance-box">
+
+                    <span>
+                        Pending
+                    </span>
+
+                    <strong>
+                        ₹{{ fee.pending_amount|floatformat:2 }}
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================================
+             PAYMENT STATUS
+        ====================================================== -->
+
+        <div class="fee-card">
+
+            <h2>
+                Payment Status
+            </h2>
+
+            <div class="action-area">
+
+                <div>
+
+                    <p class="action-description">
+
+                        Current payment status:
+
+                        {% if fee.payment_status == "Paid" %}
+
+                            <span class="status-badge status-paid">
+                                ✓ Paid
+                            </span>
+
+                        {% elif fee.payment_status == "Partial" %}
+
+                            <span class="status-badge status-partial">
+                                Partially Paid
+                            </span>
+
+                        {% else %}
+
+                            <span class="status-badge status-pending">
+                                Pending
+                            </span>
+
+                        {% endif %}
+
+                    </p>
+
+                </div>
+
+
+                <div>
+
+                    {% if fee.pending_amount > 0 %}
+
+                        <a
+                            href="{% url 'admin_payment_add' fee.id %}"
+                            class="primary-button"
+                        >
+                            + Record Payment
+                        </a>
+
+                    {% else %}
+
+                        <span class="disabled-button">
+                            ✓ Fully Paid
+                        </span>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================================
+             ENROLLMENT ACCESS
+        ====================================================== -->
+
+        <div class="fee-card enrollment-card">
+
+            <h2>
+                Course Enrollment Access
+            </h2>
+
+
+            {% if enrollment %}
+
+                <div class="enrollment-status-box">
+
+                    <div class="enrollment-status-title">
+                        Current Enrollment Status
+                    </div>
+
+
+                    {% if enrollment.is_active %}
+
+                        <!-- ACTIVE -->
+
+                        <span class="status-badge status-active">
+                            ✓ Active
+                        </span>
+
+                        <p class="enrollment-status-description">
+                            This student currently has access to
+                            the course lessons.
+                        </p>
+
+                        <div class="access-success">
+
+                            <strong>
+                                Course Access Enabled
+                            </strong>
+
+                            <br>
+
+                            The student can now log in and access
+                            the course content.
+
+                        </div>
+
+
+                    {% else %}
+
+                        <!-- INACTIVE -->
+
+                        <span class="status-badge status-inactive">
+                            🔒 Inactive
+                        </span>
+
+                        <p class="enrollment-status-description">
+                            This student does not currently have
+                            access to the course lessons.
+                        </p>
+
+
+                        {% if fee.pending_amount > 0 %}
+
+                            <div class="access-warning">
+
+                                <strong>
+                                    Payment Required
+                                </strong>
+
+                                <br>
+
+                                ₹{{ fee.pending_amount|floatformat:2 }}
+                                is still pending.
+
+                                <br>
+
+                                Complete the payment before
+                                activating this enrollment.
+
+                            </div>
+
+                        {% else %}
+
+                            <div class="access-success">
+
+                                <strong>
+                                    Payment Completed
+                                </strong>
+
+                                <br>
+
+                                The fee has been fully paid.
+                                You can now activate this student's
+                                course access.
+
+                            </div>
+
+                        {% endif %}
+
+                    {% endif %}
+
+                </div>
+
+
+                <!-- =================================================
+                     ENROLLMENT ACTIONS
+                ================================================== -->
+
+                <div class="enrollment-actions">
+
+                    {% if enrollment.is_active %}
+
+                        <!-- DEACTIVATE -->
+
+                        <a
+                            href="{% url 'admin_deactivate_enrollment' fee.id %}"
+                            class="danger-button"
+                            onclick="return confirm(
+                                'Are you sure you want to deactivate this student enrollment? The student will lose access to this course.'
+                            );"
+                        >
+                            Deactivate Enrollment
+                        </a>
+
+
+                    {% else %}
+
+                        {% if fee.pending_amount <= 0 %}
+
+                            <!-- ACTIVATE -->
+
+                            <a
+                                href="{% url 'admin_activate_enrollment' fee.id %}"
+                                class="success-button"
+                                onclick="return confirm(
+                                    'Confirm that payment has been fully received and activate this student enrollment?'
+                                );"
+                            >
+                                ✓ Activate Enrollment
+                            </a>
+
+                        {% else %}
+
+                            <!-- PAYMENT NOT COMPLETED -->
+
+                            <span class="disabled-button">
+                                🔒 Payment Required Before Activation
+                            </span>
+
+                        {% endif %}
+
+                    {% endif %}
+
+                </div>
+
+
+            {% else %}
+
+                <!-- =================================================
+                     NO ENROLLMENT
+                ================================================== -->
+
+                <div class="enrollment-status-box">
+
+                    <span class="status-badge status-inactive">
+                        No Enrollment
+                    </span>
+
+                    <p class="enrollment-status-description">
+                        This student has not created an enrollment
+                        for this course yet.
+                    </p>
+
+                    <div class="access-warning">
+
+                        <strong>
+                            Enrollment Required
+                        </strong>
+
+                        <br>
+
+                        The student must enroll in this course
+                        before the admin can activate course access.
+
+                    </div>
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+
+        <!-- =====================================================
+             PAYMENT HISTORY
+        ====================================================== -->
+
+        <div class="fee-card">
+
+            <h2>
+                Payment History
+            </h2>
+
+
+            {% if payments %}
+
+                <div class="table-wrapper">
+
+                    <table class="payment-table">
+
+                        <thead>
+
+                            <tr>
+
+                                <th>
+                                    Date
+                                </th>
+
+                                <th>
+                                    Amount
+                                </th>
+
+                                <th>
+                                    Payment Method
+                                </th>
+
+                                <th>
+                                    Reference
+                                </th>
+
+                                <th>
+                                    Notes
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody>
+
+                        {% for payment in payments %}
+
+                            <tr>
+
+                                <td>
+                                    {{ payment.payment_date|date:"d M Y" }}
+                                </td>
+
+
+                                <td>
+
+                                    <strong>
+                                        ₹{{ payment.amount|floatformat:2 }}
+                                    </strong>
+
+                                </td>
+
+
+                                <td>
+                                    {{ payment.payment_mode|default:"-" }}
+                                </td>
+
+
+                                <td>
+                                    {{ payment.transaction_reference|default:"-" }}
+                                </td>
+
+
+                                <td>
+                                    {{ payment.notes|default:"-" }}
+                                </td>
+
+                            </tr>
+
+                        {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+
+            {% else %}
+
+                <div class="empty-state">
+
+                    <div class="empty-state-icon">
+                        💳
+                    </div>
+
+                    No payments have been recorded
+                    for this fee yet.
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+
+        <!-- =====================================================
+             BACK
+        ====================================================== -->
+
+        <a
+            href="{% url 'admin_student_detail' fee.student.id %}"
+            class="back-button"
+        >
+            ← Back to Student Details
+        </a>
+
+
+    </div>
+
+</section>
+
+{% endblock %}

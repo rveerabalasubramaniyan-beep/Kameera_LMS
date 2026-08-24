@@ -1,0 +1,628 @@
+{% extends "lms/base.html" %}
+
+{% block title %}
+Batch Management | Kameera Technologies
+{% endblock %}
+
+
+{% block content %}
+
+<section class="admin-page">
+
+    <div class="container">
+
+        <div class="admin-header">
+
+            <div>
+
+                <span class="section-label">
+                    KAMEERA LMS
+                </span>
+
+                <h1>
+                    Batch Management
+                </h1>
+
+                <p>
+                    Create and manage training batches for your courses.
+                </p>
+
+            </div>
+
+
+            <a
+                href="{% url 'admin_batch_add' %}"
+                class="primary-btn"
+            >
+                + Create Batch
+            </a>
+
+        </div>
+
+
+        <!-- =====================================================
+             STATISTICS
+        ====================================================== -->
+
+        <div class="stats-grid">
+
+
+            <div class="stat-card">
+
+                <span>
+                    Total Batches
+                </span>
+
+                <strong>
+                    {{ total_batches }}
+                </strong>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <span>
+                    Upcoming
+                </span>
+
+                <strong>
+                    {{ upcoming_batches }}
+                </strong>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <span>
+                    Active
+                </span>
+
+                <strong>
+                    {{ active_batches }}
+                </strong>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <span>
+                    Completed
+                </span>
+
+                <strong>
+                    {{ completed_batches }}
+                </strong>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <span>
+                    Cancelled
+                </span>
+
+                <strong>
+                    {{ cancelled_batches }}
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================================
+             SEARCH
+        ====================================================== -->
+
+        <form
+            method="get"
+            class="search-box"
+        >
+
+            <input
+                type="text"
+                name="q"
+                value="{{ search_query }}"
+                placeholder="Search batch, code, course or instructor..."
+                class="form-control"
+            >
+
+
+            <button
+                type="submit"
+                class="primary-btn"
+            >
+                Search
+            </button>
+
+
+            {% if search_query %}
+
+                <a
+                    href="{% url 'admin_batch_management' %}"
+                    class="secondary-btn"
+                >
+                    Clear
+                </a>
+
+            {% endif %}
+
+        </form>
+
+
+        <!-- =====================================================
+             BATCH TABLE
+        ====================================================== -->
+
+        {% if batches %}
+
+            <div class="table-card">
+
+                <div class="table-wrapper">
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+
+                                <th>
+                                    Batch
+                                </th>
+
+                                <th>
+                                    Course
+                                </th>
+
+                                <th>
+                                    Schedule
+                                </th>
+
+                                <th>
+                                    Dates
+                                </th>
+
+                                <th>
+                                    Capacity
+                                </th>
+
+                                <th>
+                                    Status
+                                </th>
+
+                                <th>
+                                    Actions
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody>
+
+                            {% for batch in batches %}
+
+                                <tr>
+
+
+                                    <td>
+
+                                        <strong>
+                                            {{ batch.name }}
+                                        </strong>
+
+                                        <small>
+                                            {{ batch.batch_code }}
+                                        </small>
+
+                                    </td>
+
+
+                                    <td>
+
+                                        {{ batch.course.title }}
+
+                                    </td>
+
+
+                                    <td>
+
+                                        {{ batch.schedule|default:"Not specified" }}
+
+                                    </td>
+
+
+                                    <td>
+
+                                        {{ batch.start_date|date:"d M Y" }}
+
+                                        -
+
+                                        {{ batch.end_date|date:"d M Y" }}
+
+                                    </td>
+
+
+                                    <td>
+
+                                        {{ batch.maximum_students }}
+
+                                    </td>
+
+
+                                    <td>
+
+                                        {% if batch.status == "active" %}
+
+                                            <span class="status active">
+                                                Active
+                                            </span>
+
+                                        {% elif batch.status == "upcoming" %}
+
+                                            <span class="status upcoming">
+                                                Upcoming
+                                            </span>
+
+                                        {% elif batch.status == "completed" %}
+
+                                            <span class="status completed">
+                                                Completed
+                                            </span>
+
+                                        {% else %}
+
+                                            <span class="status cancelled">
+                                                Cancelled
+                                            </span>
+
+                                        {% endif %}
+
+                                    </td>
+
+
+                                    <td>
+
+                                        <div class="actions">
+
+
+                                            <a
+                                                href="{% url 'admin_batch_edit' batch.id %}"
+                                                class="action-btn edit"
+                                            >
+                                                Edit
+                                            </a>
+
+
+                                            <a
+                                                href="{% url 'admin_batch_toggle' batch.id %}"
+                                                class="action-btn toggle"
+                                            >
+
+                                                {% if batch.status == "active" %}
+
+                                                    Deactivate
+
+                                                {% else %}
+
+                                                    Activate
+
+                                                {% endif %}
+
+                                            </a>
+
+
+                                            <a
+                                                href="{% url 'admin_batch_delete' batch.id %}"
+                                                class="action-btn delete"
+                                            >
+                                                Delete
+                                            </a>
+
+
+                                        </div>
+
+                                    </td>
+
+
+                                </tr>
+
+                            {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+
+        {% else %}
+
+
+            <div class="empty-state">
+
+                <div class="empty-icon">
+                    📚
+                </div>
+
+                <h2>
+                    No Batches Found
+                </h2>
+
+                <p>
+                    Create your first training batch to get started.
+                </p>
+
+                <a
+                    href="{% url 'admin_batch_add' %}"
+                    class="primary-btn"
+                >
+                    + Create Batch
+                </a>
+
+            </div>
+
+
+        {% endif %}
+
+
+    </div>
+
+</section>
+
+
+<style>
+
+.admin-page {
+    padding: 70px 0;
+}
+
+
+.admin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 30px;
+    margin-bottom: 40px;
+}
+
+
+.admin-header h1 {
+    margin: 8px 0;
+    color: #162d52;
+}
+
+
+.admin-header p {
+    margin: 0;
+    color: #61728d;
+}
+
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 18px;
+    margin-bottom: 30px;
+}
+
+
+.stat-card {
+    background: #ffffff;
+    border: 1px solid #e5ebf5;
+    border-radius: 18px;
+    padding: 22px;
+    box-shadow: 0 8px 25px rgba(20, 50, 100, 0.07);
+}
+
+
+.stat-card span {
+    display: block;
+    color: #61728d;
+    font-size: 14px;
+    margin-bottom: 8px;
+}
+
+
+.stat-card strong {
+    font-size: 28px;
+    color: #162d52;
+}
+
+
+.search-box {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 25px;
+}
+
+
+.search-box input {
+    flex: 1;
+}
+
+
+.table-card {
+    background: #ffffff;
+    border: 1px solid #e5ebf5;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(20, 50, 100, 0.07);
+}
+
+
+.table-wrapper {
+    overflow-x: auto;
+}
+
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+
+th,
+td {
+    padding: 18px;
+    text-align: left;
+    border-bottom: 1px solid #edf1f7;
+}
+
+
+th {
+    background: #f7f9fc;
+    color: #162d52;
+    font-size: 14px;
+}
+
+
+td {
+    color: #53647d;
+}
+
+
+td strong {
+    display: block;
+    color: #162d52;
+}
+
+
+td small {
+    display: block;
+    margin-top: 4px;
+    color: #8190a5;
+}
+
+
+.status {
+    display: inline-block;
+    padding: 6px 11px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+
+.status.active {
+    background: #e8f7ef;
+    color: #177245;
+}
+
+
+.status.upcoming {
+    background: #fff5df;
+    color: #9a6700;
+}
+
+
+.status.completed {
+    background: #eaf1ff;
+    color: #2455a6;
+}
+
+
+.status.cancelled {
+    background: #fdecec;
+    color: #b42318;
+}
+
+
+.actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+}
+
+
+.action-btn,
+.secondary-btn {
+    display: inline-block;
+    padding: 8px 12px;
+    border-radius: 9px;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+
+.action-btn.edit {
+    background: #eaf1ff;
+    color: #2455a6;
+}
+
+
+.action-btn.toggle {
+    background: #edf8f1;
+    color: #177245;
+}
+
+
+.action-btn.delete {
+    background: #fdecec;
+    color: #b42318;
+}
+
+
+.empty-state {
+    text-align: center;
+    padding: 70px 20px;
+    background: #ffffff;
+    border: 1px solid #e5ebf5;
+    border-radius: 20px;
+}
+
+
+.empty-icon {
+    font-size: 48px;
+    margin-bottom: 15px;
+}
+
+
+.empty-state h2 {
+    color: #162d52;
+}
+
+
+.empty-state p {
+    color: #61728d;
+    margin-bottom: 25px;
+}
+
+
+@media (max-width: 900px) {
+
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .admin-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+}
+
+
+@media (max-width: 600px) {
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .search-box {
+        flex-direction: column;
+    }
+
+}
+
+</style>
+
+{% endblock %}

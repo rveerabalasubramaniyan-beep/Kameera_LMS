@@ -1,0 +1,7 @@
+Django==6.0.7
+mssql-django
+pyodbc
+gunicorn
+whitenoise
+psycopg2-binary
+dj-database-url

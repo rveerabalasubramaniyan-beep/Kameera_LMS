@@ -1,0 +1,123 @@
+{% extends "lms/base.html" %}
+
+{% block title %}
+    Courses | Kameera Technologies
+{% endblock %}
+
+
+{% block content %}
+
+<section class="courses-page">
+
+    <div class="courses-header">
+
+        <span class="section-label">
+            KAMEERA TECHNOLOGIES
+        </span>
+
+        <h1>
+            Explore Our Courses
+        </h1>
+
+        <p>
+            Learn practical skills in Data Analytics,
+            Business Intelligence and Technology.
+        </p>
+
+    </div>
+
+
+    {% if courses %}
+
+        <div class="course-grid">
+
+            {% for course in courses %}
+
+                <div class="course-card">
+
+                    <div class="course-icon">
+
+                        {% if "Power BI" in course.title %}
+                            📊
+                        {% elif "SQL" in course.title %}
+                            🗄️
+                        {% elif "Excel" in course.title %}
+                            📈
+                        {% elif "Python" in course.title %}
+                            🐍
+                        {% else %}
+                            💻
+                        {% endif %}
+
+                    </div>
+
+
+                    <h2>
+                        {{ course.title }}
+                    </h2>
+
+
+                    <p class="course-description">
+
+                        {{ course.short_description }}
+
+                    </p>
+
+
+                    <div class="course-info">
+
+                        <span>
+                            ⏱ {{ course.duration }}
+                        </span>
+
+                        <span>
+                            🎓 {{ course.level }}
+                        </span>
+
+                    </div>
+
+
+                    <div class="course-price">
+
+                        ₹{{ course.price }}
+
+                    </div>
+
+
+                    <a
+                        href="{% url 'course_detail' course.slug %}"
+                        class="view-course"
+                    >
+                        View Course →
+                    </a>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+
+    {% else %}
+
+        <div class="empty-state">
+
+            <div>
+                📚
+            </div>
+
+            <h2>
+                No Courses Available
+            </h2>
+
+            <p>
+                Courses will be available soon.
+            </p>
+
+        </div>
+
+    {% endif %}
+
+</section>
+
+{% endblock %}

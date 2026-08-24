@@ -1,0 +1,147 @@
+{% extends "lms/base.html" %}
+
+{% block title %}
+    Student Login | Kameera Technologies
+{% endblock %}
+
+
+{% block content %}
+
+<section class="auth-page">
+
+    <div class="auth-card">
+
+        <div class="auth-icon">
+            🔐
+        </div>
+
+
+        <h1>
+            Student Login
+        </h1>
+
+
+        <p class="auth-subtitle">
+            Login to access your Kameera LMS account.
+        </p>
+
+
+        {% if form.errors %}
+
+            <div class="error-message">
+                Username or password is incorrect.
+            </div>
+
+        {% endif %}
+
+
+        <form
+            method="post"
+            class="auth-form"
+        >
+
+            {% csrf_token %}
+
+
+            {% if next %}
+
+                <input
+                    type="hidden"
+                    name="next"
+                    value="{{ next }}"
+                >
+
+            {% endif %}
+
+
+            <!-- ================================================= -->
+            <!-- USERNAME -->
+            <!-- ================================================= -->
+
+            <div class="form-group">
+
+                <label for="id_username">
+                    Username
+                </label>
+
+                <input
+                    type="text"
+                    name="username"
+                    id="id_username"
+                    placeholder="Enter your username"
+                    required
+                    autofocus
+                >
+
+            </div>
+
+
+            <!-- ================================================= -->
+            <!-- PASSWORD -->
+            <!-- ================================================= -->
+
+            <div class="form-group">
+
+                <label for="id_password">
+                    Password
+                </label>
+
+                <input
+                    type="password"
+                    name="password"
+                    id="id_password"
+                    placeholder="Enter your password"
+                    required
+                >
+
+            </div>
+
+
+            <!-- ================================================= -->
+            <!-- FORGOT PASSWORD -->
+            <!-- ================================================= -->
+
+            <div class="forgot-password">
+
+                <a href="{% url 'password_reset' %}">
+                    Forgot Password?
+                </a>
+
+            </div>
+
+
+            <!-- ================================================= -->
+            <!-- LOGIN BUTTON -->
+            <!-- ================================================= -->
+
+            <button
+                type="submit"
+                class="auth-submit"
+            >
+                Login
+            </button>
+
+        </form>
+
+
+        <!-- ===================================================== -->
+        <!-- REGISTER -->
+        <!-- ===================================================== -->
+
+        <div class="auth-footer">
+
+            <p>
+                Don't have an account?
+            </p>
+
+            <a href="{% url 'student_register' %}">
+                Create Student Account
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}

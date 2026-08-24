@@ -1,0 +1,967 @@
+{% extends "lms/base.html" %}
+
+{% block title %}
+    Lesson Management | {{ course.title }} | Kameera Technologies
+{% endblock %}
+
+{% block content %}
+
+<section class="admin-page">
+
+    <div class="container">
+
+        <!-- =====================================================
+             HEADER
+        ====================================================== -->
+
+        <div class="admin-header">
+
+            <div>
+
+                <span class="section-label">
+                    KAMEERA TECHNOLOGIES
+                </span>
+
+                <h1>
+                    Lesson Management
+                </h1>
+
+                <p>
+                    Manage lessons and study materials for:
+                    <strong>{{ course.title }}</strong>
+                </p>
+
+            </div>
+
+            <div>
+
+                <a
+                    href="{% url 'admin_lesson_add' course.id %}"
+                    class="primary-btn"
+                >
+                    + Add New Lesson
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================================
+             COURSE INFORMATION
+        ====================================================== -->
+
+        <div class="course-info-card">
+
+            <div>
+
+                <span class="info-label">
+                    COURSE
+                </span>
+
+                <h2>
+                    {{ course.title }}
+                </h2>
+
+            </div>
+
+            <div>
+
+                <span class="info-label">
+                    CATEGORY
+                </span>
+
+                <strong>
+                    {{ course.category }}
+                </strong>
+
+            </div>
+
+            <div>
+
+                <span class="info-label">
+                    LEVEL
+                </span>
+
+                <strong>
+                    {{ course.level }}
+                </strong>
+
+            </div>
+
+            <div>
+
+                <span class="info-label">
+                    DURATION
+                </span>
+
+                <strong>
+                    {{ course.duration }}
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================================
+             LESSON LIST
+        ====================================================== -->
+
+        <div class="admin-section">
+
+            <div class="section-heading">
+
+                <div>
+
+                    <span class="section-label">
+                        COURSE CONTENT
+                    </span>
+
+                    <h2>
+                        Lessons
+                    </h2>
+
+                </div>
+
+                <div class="lesson-count">
+
+                    {{ lessons|length }}
+                    Lesson{{ lessons|length|pluralize }}
+
+                </div>
+
+            </div>
+
+
+            {% if lessons %}
+
+                <div class="lesson-list">
+
+                    {% for lesson in lessons %}
+
+                        <article class="lesson-card">
+
+
+                            <!-- =================================================
+                                 LESSON NUMBER
+                            ================================================== -->
+
+                            <div class="lesson-number">
+
+                                <span>
+                                    {{ lesson.lesson_number }}
+                                </span>
+
+                            </div>
+
+
+                            <!-- =================================================
+                                 LESSON INFORMATION
+                            ================================================== -->
+
+                            <div class="lesson-content">
+
+                                <div class="lesson-title-row">
+
+                                    <h3>
+                                        {{ lesson.title }}
+                                    </h3>
+
+
+                                    {% if lesson.is_active %}
+
+                                        <span class="status-active">
+                                            Active
+                                        </span>
+
+                                    {% else %}
+
+                                        <span class="status-inactive">
+                                            Inactive
+                                        </span>
+
+                                    {% endif %}
+
+                                </div>
+
+
+                                {% if lesson.description %}
+
+                                    <p>
+                                        {{ lesson.description }}
+                                    </p>
+
+                                {% else %}
+
+                                    <p class="no-description">
+                                        No lesson description added.
+                                    </p>
+
+                                {% endif %}
+
+
+                                <!-- =================================================
+                                     LESSON MATERIAL STATUS
+                                ================================================== -->
+
+                                <div class="lesson-materials">
+
+                                    {% if lesson.video_url %}
+
+                                        <span class="material-available">
+                                            🎥 Video Added
+                                        </span>
+
+                                    {% else %}
+
+                                        <span class="material-missing">
+                                            🎥 No Video
+                                        </span>
+
+                                    {% endif %}
+
+
+                                    {% if lesson.pdf_file %}
+
+                                        <span class="material-available">
+                                            📄 PDF Added
+                                        </span>
+
+                                    {% else %}
+
+                                        <span class="material-missing">
+                                            📄 No PDF
+                                        </span>
+
+                                    {% endif %}
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- =================================================
+                                 ACTIONS
+                            ================================================== -->
+
+                            <div class="lesson-actions">
+
+                                <a
+                                    href="{% url 'admin_lesson_edit' lesson.id %}"
+                                    class="secondary-btn"
+                                >
+                                    ✏️ Edit
+                                </a>
+
+
+                                {% if lesson.is_active %}
+
+                                    <a
+                                        href="{% url 'admin_lesson_toggle' lesson.id %}"
+                                        class="warning-btn"
+                                    >
+                                        🔴 Deactivate
+                                    </a>
+
+                                {% else %}
+
+                                    <a
+                                        href="{% url 'admin_lesson_toggle' lesson.id %}"
+                                        class="success-btn"
+                                    >
+                                        🟢 Activate
+                                    </a>
+
+                                {% endif %}
+
+
+                                <a
+                                    href="{% url 'admin_lesson_delete' lesson.id %}"
+                                    class="danger-btn"
+                                >
+                                    🗑️ Delete
+                                </a>
+
+                            </div>
+
+                        </article>
+
+                    {% endfor %}
+
+                </div>
+
+
+            {% else %}
+
+                <!-- =================================================
+                     EMPTY STATE
+                ================================================== -->
+
+                <div class="empty-state">
+
+                    <div class="empty-icon">
+                        📚
+                    </div>
+
+                    <h2>
+                        No Lessons Yet
+                    </h2>
+
+                    <p>
+                        This course doesn't have any lessons yet.
+                        Add the first lesson to start building the
+                        course content.
+                    </p>
+
+                    <a
+                        href="{% url 'admin_lesson_add' course.id %}"
+                        class="primary-btn"
+                    >
+                        + Add First Lesson
+                    </a>
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+
+        <!-- =====================================================
+             BACK BUTTONS
+        ====================================================== -->
+
+        <div class="admin-back">
+
+            <a
+                href="{% url 'admin_course_management' %}"
+                class="secondary-btn"
+            >
+                ← Back to Course Management
+            </a>
+
+            <a
+                href="{% url 'admin_dashboard' %}"
+                class="secondary-btn"
+            >
+                ← Admin Dashboard
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<style>
+
+/* ============================================================
+   ADMIN PAGE
+============================================================ */
+
+.admin-page {
+
+    padding: 65px 0 80px;
+
+    background: #f5f8ff;
+
+    min-height: 100vh;
+
+}
+
+
+.admin-header {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    gap: 30px;
+
+    margin-bottom: 35px;
+
+}
+
+
+.admin-header h1 {
+
+    margin: 10px 0;
+
+    font-size: 42px;
+
+    color: #14213d;
+
+}
+
+
+.admin-header p {
+
+    color: #64748b;
+
+    font-size: 17px;
+
+}
+
+
+/* ============================================================
+   COURSE INFORMATION
+============================================================ */
+
+.course-info-card {
+
+    display: grid;
+
+    grid-template-columns:
+        2fr
+        repeat(3, 1fr);
+
+    gap: 20px;
+
+    background: white;
+
+    padding: 25px;
+
+    border-radius: 18px;
+
+    margin-bottom: 30px;
+
+    box-shadow:
+        0 8px 25px rgba(20, 33, 61, 0.06);
+
+}
+
+
+.course-info-card h2 {
+
+    margin: 7px 0 0;
+
+    color: #14213d;
+
+}
+
+
+.info-label {
+
+    display: block;
+
+    font-size: 12px;
+
+    font-weight: 700;
+
+    letter-spacing: 0.7px;
+
+    color: #64748b;
+
+    margin-bottom: 5px;
+
+}
+
+
+.course-info-card strong {
+
+    color: #174ea6;
+
+}
+
+
+/* ============================================================
+   SECTION
+============================================================ */
+
+.admin-section {
+
+    background: white;
+
+    padding: 35px;
+
+    border-radius: 22px;
+
+    box-shadow:
+        0 10px 35px rgba(20, 33, 61, 0.06);
+
+}
+
+
+.section-heading {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    margin-bottom: 30px;
+
+}
+
+
+.section-heading h2 {
+
+    margin-top: 8px;
+
+    color: #14213d;
+
+    font-size: 30px;
+
+}
+
+
+.lesson-count {
+
+    background: #eef3ff;
+
+    color: #174ea6;
+
+    padding: 9px 14px;
+
+    border-radius: 20px;
+
+    font-weight: 700;
+
+    font-size: 14px;
+
+}
+
+
+/* ============================================================
+   LESSON LIST
+============================================================ */
+
+.lesson-list {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 18px;
+
+}
+
+
+.lesson-card {
+
+    display: grid;
+
+    grid-template-columns:
+        65px
+        1fr
+        auto;
+
+    gap: 20px;
+
+    align-items: center;
+
+    padding: 22px;
+
+    border: 1px solid #e5eaf2;
+
+    border-radius: 16px;
+
+    transition: 0.2s ease;
+
+}
+
+
+.lesson-card:hover {
+
+    box-shadow:
+        0 8px 25px rgba(20, 33, 61, 0.07);
+
+    transform: translateY(-1px);
+
+}
+
+
+/* ============================================================
+   LESSON NUMBER
+============================================================ */
+
+.lesson-number {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+}
+
+
+.lesson-number span {
+
+    width: 50px;
+
+    height: 50px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: #174ea6;
+
+    color: white;
+
+    font-size: 20px;
+
+    font-weight: 800;
+
+}
+
+
+/* ============================================================
+   LESSON CONTENT
+============================================================ */
+
+.lesson-title-row {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    flex-wrap: wrap;
+
+}
+
+
+.lesson-content h3 {
+
+    margin: 0;
+
+    color: #14213d;
+
+    font-size: 20px;
+
+}
+
+
+.lesson-content p {
+
+    margin: 8px 0 12px;
+
+    color: #64748b;
+
+    line-height: 1.55;
+
+}
+
+
+.no-description {
+
+    font-style: italic;
+
+}
+
+
+/* ============================================================
+   STATUS
+============================================================ */
+
+.status-active,
+.status-inactive {
+
+    padding: 5px 9px;
+
+    border-radius: 20px;
+
+    font-size: 11px;
+
+    font-weight: 700;
+
+}
+
+
+.status-active {
+
+    background: #dcfce7;
+
+    color: #166534;
+
+}
+
+
+.status-inactive {
+
+    background: #fee2e2;
+
+    color: #991b1b;
+
+}
+
+
+/* ============================================================
+   MATERIAL STATUS
+============================================================ */
+
+.lesson-materials {
+
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 8px;
+
+}
+
+
+.material-available,
+.material-missing {
+
+    padding: 6px 9px;
+
+    border-radius: 7px;
+
+    font-size: 12px;
+
+}
+
+
+.material-available {
+
+    background: #ecfdf5;
+
+    color: #047857;
+
+}
+
+
+.material-missing {
+
+    background: #f8fafc;
+
+    color: #64748b;
+
+}
+
+
+/* ============================================================
+   ACTIONS
+============================================================ */
+
+.lesson-actions {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 8px;
+
+    min-width: 125px;
+
+}
+
+
+.primary-btn,
+.secondary-btn,
+.warning-btn,
+.success-btn,
+.danger-btn {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    text-decoration: none;
+
+    padding: 10px 14px;
+
+    border-radius: 8px;
+
+    font-weight: 700;
+
+    border: none;
+
+    cursor: pointer;
+
+    font-size: 14px;
+
+}
+
+
+.primary-btn {
+
+    background: #174ea6;
+
+    color: white;
+
+}
+
+
+.secondary-btn {
+
+    background: white;
+
+    color: #174ea6;
+
+    border: 1px solid #174ea6;
+
+}
+
+
+.warning-btn {
+
+    background: #fff7ed;
+
+    color: #c2410c;
+
+}
+
+
+.success-btn {
+
+    background: #dcfce7;
+
+    color: #166534;
+
+}
+
+
+.danger-btn {
+
+    background: #fee2e2;
+
+    color: #b91c1c;
+
+}
+
+
+/* ============================================================
+   EMPTY STATE
+============================================================ */
+
+.empty-state {
+
+    text-align: center;
+
+    padding: 70px 20px;
+
+}
+
+
+.empty-icon {
+
+    font-size: 55px;
+
+    margin-bottom: 15px;
+
+}
+
+
+.empty-state h2 {
+
+    color: #14213d;
+
+}
+
+
+.empty-state p {
+
+    max-width: 550px;
+
+    margin: 0 auto 25px;
+
+    color: #64748b;
+
+    line-height: 1.6;
+
+}
+
+
+/* ============================================================
+   BACK
+============================================================ */
+
+.admin-back {
+
+    display: flex;
+
+    gap: 12px;
+
+    flex-wrap: wrap;
+
+    margin-top: 30px;
+
+}
+
+
+/* ============================================================
+   RESPONSIVE
+============================================================ */
+
+@media (max-width: 900px) {
+
+    .admin-header {
+
+        flex-direction: column;
+
+        align-items: flex-start;
+
+    }
+
+    .course-info-card {
+
+        grid-template-columns: 1fr 1fr;
+
+    }
+
+    .lesson-card {
+
+        grid-template-columns: 55px 1fr;
+
+    }
+
+    .lesson-actions {
+
+        grid-column: 1 / -1;
+
+        flex-direction: row;
+
+        flex-wrap: wrap;
+
+    }
+
+}
+
+
+@media (max-width: 600px) {
+
+    .course-info-card {
+
+        grid-template-columns: 1fr;
+
+    }
+
+    .admin-section {
+
+        padding: 22px;
+
+    }
+
+    .lesson-card {
+
+        grid-template-columns: 1fr;
+
+    }
+
+    .lesson-number {
+
+        justify-content: flex-start;
+
+    }
+
+}
+
+</style>
+
+{% endblock %}

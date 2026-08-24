@@ -1,0 +1,904 @@
+{% extends "lms/base.html" %}
+
+{% block title %}
+{% if lesson %}
+Edit Lesson | Kameera Technologies
+{% else %}
+Add Lesson | Kameera Technologies
+{% endif %}
+{% endblock %}
+
+{% block content %}
+
+<section class="admin-page">
+
+    <div class="container">
+
+        <!-- =====================================================
+             HEADER
+        ====================================================== -->
+
+        <div class="admin-header">
+
+            <div>
+
+                <span class="section-label">
+                    KAMEERA TECHNOLOGIES
+                </span>
+
+                <h1>
+                    {% if lesson %}
+                        Edit Lesson
+                    {% else %}
+                        Add Lesson
+                    {% endif %}
+                </h1>
+
+                <p>
+                    {% if lesson %}
+                        Update the lesson content and learning material.
+                    {% else %}
+                        Add a new lesson to this course.
+                    {% endif %}
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================================
+             COURSE INFORMATION
+        ====================================================== -->
+
+        <div class="course-info-card">
+
+            <div class="course-icon">
+                📚
+            </div>
+
+            <div>
+
+                <span class="course-info-label">
+                    COURSE
+                </span>
+
+                <h2>
+                    {{ course.title }}
+                </h2>
+
+                <p>
+                    {{ course.category }}
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================================
+             FORM
+        ====================================================== -->
+
+        <div class="form-card">
+
+            <form
+                method="POST"
+                enctype="multipart/form-data"
+            >
+
+                {% csrf_token %}
+
+
+                <!-- =================================================
+                     FORM ERRORS
+                ================================================== -->
+
+                {% if form.non_field_errors %}
+
+                    <div class="error-box">
+
+                        {% for error in form.non_field_errors %}
+
+                            <p>
+                                {{ error }}
+                            </p>
+
+                        {% endfor %}
+
+                    </div>
+
+                {% endif %}
+
+
+                <!-- =================================================
+                     LESSON TITLE
+                ================================================== -->
+
+                <div class="form-group">
+
+                    <label for="{{ form.title.id_for_label }}">
+                        Lesson Title
+                    </label>
+
+                    {{ form.title }}
+
+                    {% if form.title.errors %}
+
+                        <div class="field-error">
+
+                            {% for error in form.title.errors %}
+                                {{ error }}
+                            {% endfor %}
+
+                        </div>
+
+                    {% endif %}
+
+                    <small>
+                        Example: Introduction to Power BI
+                    </small>
+
+                </div>
+
+
+                <!-- =================================================
+                     LESSON NUMBER
+                ================================================== -->
+
+                <div class="form-group">
+
+                    <label for="{{ form.lesson_number.id_for_label }}">
+                        Lesson Number
+                    </label>
+
+                    {{ form.lesson_number }}
+
+                    {% if form.lesson_number.errors %}
+
+                        <div class="field-error">
+
+                            {% for error in form.lesson_number.errors %}
+                                {{ error }}
+                            {% endfor %}
+
+                        </div>
+
+                    {% endif %}
+
+                    <small>
+                        Enter the order in which this lesson should appear.
+                    </small>
+
+                </div>
+
+
+                <!-- =================================================
+                     DESCRIPTION
+                ================================================== -->
+
+                <div class="form-group">
+
+                    <label for="{{ form.description.id_for_label }}">
+                        Lesson Description
+                    </label>
+
+                    {{ form.description }}
+
+                    {% if form.description.errors %}
+
+                        <div class="field-error">
+
+                            {% for error in form.description.errors %}
+                                {{ error }}
+                            {% endfor %}
+
+                        </div>
+
+                    {% endif %}
+
+                    <small>
+                        Explain what students will learn in this lesson.
+                    </small>
+
+                </div>
+
+
+                <!-- =================================================
+                     VIDEO URL
+                ================================================== -->
+
+                <div class="form-group">
+
+                    <label for="{{ form.video_url.id_for_label }}">
+                        Video URL
+                    </label>
+
+                    {{ form.video_url }}
+
+                    {% if form.video_url.errors %}
+
+                        <div class="field-error">
+
+                            {% for error in form.video_url.errors %}
+                                {{ error }}
+                            {% endfor %}
+
+                        </div>
+
+                    {% endif %}
+
+                    <small>
+                        Example: YouTube or other video URL.
+                    </small>
+
+                </div>
+
+
+                <!-- =================================================
+                     PDF FILE
+                ================================================== -->
+
+                <div class="form-group">
+
+                    <label for="{{ form.pdf_file.id_for_label }}">
+                        Study Material / PDF
+                    </label>
+
+                    {{ form.pdf_file }}
+
+                    {% if form.pdf_file.errors %}
+
+                        <div class="field-error">
+
+                            {% for error in form.pdf_file.errors %}
+                                {{ error }}
+                            {% endfor %}
+
+                        </div>
+
+                    {% endif %}
+
+                    <small>
+                        Upload PDF notes, study material or lesson documents.
+                    </small>
+
+
+                    {% if lesson and lesson.pdf_file %}
+
+                        <div class="existing-file">
+
+                            📄 Existing file:
+
+                            <a
+                                href="{{ lesson.pdf_file.url }}"
+                                target="_blank"
+                            >
+                                View Current PDF
+                            </a>
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+
+                <!-- =================================================
+                     ACTIVE STATUS
+                ================================================== -->
+
+                <div class="checkbox-group">
+
+                    {{ form.is_active }}
+
+                    <label for="{{ form.is_active.id_for_label }}">
+                        Lesson is Active
+                    </label>
+
+                </div>
+
+
+                <!-- =================================================
+                     BUTTONS
+                ================================================== -->
+
+                <div class="form-actions">
+
+                    <a
+                        href="{% url 'admin_lesson_management' course.id %}"
+                        class="secondary-btn"
+                    >
+                        ← Cancel
+                    </a>
+
+
+                    <button
+                        type="submit"
+                        class="primary-btn"
+                    >
+
+                        {% if lesson %}
+                            💾 Update Lesson
+                        {% else %}
+                            ➕ Create Lesson
+                        {% endif %}
+
+                    </button>
+
+                </div>
+
+
+            </form>
+
+        </div>
+
+
+        <!-- =====================================================
+             BACK TO COURSE MANAGEMENT
+        ====================================================== -->
+
+        <div class="back-link">
+
+            <a
+                href="{% url 'admin_lesson_management' course.id %}"
+            >
+                ← Back to Lesson Management
+            </a>
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+<style>
+
+/* ============================================================
+   PAGE
+============================================================ */
+
+.admin-page {
+
+    min-height: 100vh;
+
+    padding: 70px 0;
+
+    background: #f5f8ff;
+
+}
+
+
+/* ============================================================
+   HEADER
+============================================================ */
+
+.admin-header {
+
+    margin-bottom: 35px;
+
+}
+
+
+.section-label {
+
+    display: inline-block;
+
+    color: #2861c7;
+
+    font-size: 14px;
+
+    font-weight: 800;
+
+    letter-spacing: 3px;
+
+}
+
+
+.admin-header h1 {
+
+    margin: 12px 0;
+
+    font-size: 48px;
+
+    color: #14213d;
+
+}
+
+
+.admin-header p {
+
+    margin: 0;
+
+    font-size: 18px;
+
+    color: #64748b;
+
+}
+
+
+/* ============================================================
+   COURSE INFO
+============================================================ */
+
+.course-info-card {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 20px;
+
+    background: white;
+
+    padding: 25px 30px;
+
+    border-radius: 20px;
+
+    margin-bottom: 30px;
+
+    box-shadow:
+        0 10px 30px rgba(20, 33, 61, 0.06);
+
+}
+
+
+.course-icon {
+
+    width: 65px;
+
+    height: 65px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    background: #eef4ff;
+
+    border-radius: 15px;
+
+    font-size: 30px;
+
+}
+
+
+.course-info-label {
+
+    color: #2861c7;
+
+    font-size: 12px;
+
+    font-weight: 800;
+
+    letter-spacing: 2px;
+
+}
+
+
+.course-info-card h2 {
+
+    margin: 5px 0;
+
+    color: #14213d;
+
+    font-size: 24px;
+
+}
+
+
+.course-info-card p {
+
+    margin: 0;
+
+    color: #64748b;
+
+}
+
+
+/* ============================================================
+   FORM CARD
+============================================================ */
+
+.form-card {
+
+    max-width: 900px;
+
+    background: white;
+
+    padding: 45px;
+
+    border-radius: 24px;
+
+    box-shadow:
+        0 12px 40px rgba(20, 33, 61, 0.07);
+
+}
+
+
+/* ============================================================
+   FORM GROUP
+============================================================ */
+
+.form-group {
+
+    margin-bottom: 28px;
+
+}
+
+
+.form-group label {
+
+    display: block;
+
+    margin-bottom: 9px;
+
+    color: #14213d;
+
+    font-size: 16px;
+
+    font-weight: 700;
+
+}
+
+
+.form-group input[type="text"],
+.form-group input[type="number"],
+.form-group input[type="url"],
+.form-group input[type="file"],
+.form-group textarea,
+.form-group select {
+
+    width: 100%;
+
+    box-sizing: border-box;
+
+    padding: 14px 16px;
+
+    border: 1px solid #d9e1ee;
+
+    border-radius: 10px;
+
+    background: white;
+
+    color: #14213d;
+
+    font-size: 15px;
+
+    font-family: inherit;
+
+    outline: none;
+
+    transition: 0.2s ease;
+
+}
+
+
+.form-group textarea {
+
+    min-height: 150px;
+
+    resize: vertical;
+
+}
+
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+
+    border-color: #2861c7;
+
+    box-shadow:
+        0 0 0 3px rgba(40, 97, 199, 0.10);
+
+}
+
+
+.form-group input[type="file"] {
+
+    padding: 11px;
+
+}
+
+
+.form-group small {
+
+    display: block;
+
+    margin-top: 7px;
+
+    color: #64748b;
+
+    font-size: 13px;
+
+}
+
+
+/* ============================================================
+   ERRORS
+============================================================ */
+
+.error-box {
+
+    background: #fee2e2;
+
+    border: 1px solid #fecaca;
+
+    color: #991b1b;
+
+    padding: 15px 18px;
+
+    border-radius: 10px;
+
+    margin-bottom: 25px;
+
+}
+
+
+.error-box p {
+
+    margin: 4px 0;
+
+}
+
+
+.field-error {
+
+    margin-top: 7px;
+
+    color: #dc2626;
+
+    font-size: 13px;
+
+}
+
+
+/* ============================================================
+   EXISTING FILE
+============================================================ */
+
+.existing-file {
+
+    margin-top: 12px;
+
+    padding: 12px 15px;
+
+    background: #f1f5ff;
+
+    border-radius: 8px;
+
+    color: #475569;
+
+    font-size: 14px;
+
+}
+
+
+.existing-file a {
+
+    color: #1f52a8;
+
+    font-weight: 700;
+
+    text-decoration: none;
+
+}
+
+
+.existing-file a:hover {
+
+    text-decoration: underline;
+
+}
+
+
+/* ============================================================
+   CHECKBOX
+============================================================ */
+
+.checkbox-group {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    margin-bottom: 35px;
+
+}
+
+
+.checkbox-group input[type="checkbox"] {
+
+    width: 18px;
+
+    height: 18px;
+
+    accent-color: #1f52a8;
+
+}
+
+
+.checkbox-group label {
+
+    color: #14213d;
+
+    font-weight: 600;
+
+}
+
+
+/* ============================================================
+   BUTTONS
+============================================================ */
+
+.form-actions {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    gap: 15px;
+
+    padding-top: 20px;
+
+    border-top: 1px solid #e5eaf2;
+
+}
+
+
+.primary-btn,
+.secondary-btn {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 13px 22px;
+
+    border-radius: 10px;
+
+    text-decoration: none;
+
+    font-weight: 700;
+
+    font-size: 15px;
+
+    cursor: pointer;
+
+    transition: 0.2s ease;
+
+}
+
+
+.primary-btn {
+
+    border: none;
+
+    background: #1f52a8;
+
+    color: white;
+
+}
+
+
+.primary-btn:hover {
+
+    background: #17438c;
+
+}
+
+
+.secondary-btn {
+
+    background: white;
+
+    color: #1f52a8;
+
+    border: 1px solid #1f52a8;
+
+}
+
+
+.secondary-btn:hover {
+
+    background: #eef4ff;
+
+}
+
+
+/* ============================================================
+   BACK LINK
+============================================================ */
+
+.back-link {
+
+    margin-top: 25px;
+
+}
+
+
+.back-link a {
+
+    color: #1f52a8;
+
+    font-weight: 700;
+
+    text-decoration: none;
+
+}
+
+
+.back-link a:hover {
+
+    text-decoration: underline;
+
+}
+
+
+/* ============================================================
+   RESPONSIVE
+============================================================ */
+
+@media (max-width: 700px) {
+
+    .admin-page {
+
+        padding: 40px 0;
+
+    }
+
+
+    .admin-header h1 {
+
+        font-size: 36px;
+
+    }
+
+
+    .form-card {
+
+        padding: 25px;
+
+    }
+
+
+    .course-info-card {
+
+        padding: 20px;
+
+    }
+
+
+    .form-actions {
+
+        flex-direction: column-reverse;
+
+        align-items: stretch;
+
+    }
+
+
+    .primary-btn,
+    .secondary-btn {
+
+        width: 100%;
+
+        box-sizing: border-box;
+
+    }
+
+}
+
+</style>
+
+{% endblock %}

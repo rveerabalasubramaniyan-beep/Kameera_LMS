@@ -1,0 +1,761 @@
+{% extends "lms/base.html" %}
+
+{% block title %}
+    {{ page_title }} | Kameera Technologies
+{% endblock %}
+
+{% block content %}
+
+<section class="admin-page">
+
+    <div class="container">
+
+        <!-- =====================================================
+             HEADER
+        ====================================================== -->
+
+        <div class="admin-header">
+
+            <div>
+
+                <span class="section-label">
+                    KAMEERA TECHNOLOGIES
+                </span>
+
+                <h1>
+                    {{ page_title }}
+                </h1>
+
+                <p>
+                    {% if course %}
+                        Update the details of this course.
+                    {% else %}
+                        Create a new course for the Kameera LMS.
+                    {% endif %}
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================================
+             FORM CARD
+        ====================================================== -->
+
+        <div class="admin-form-card">
+
+            <form
+                method="POST"
+                enctype="multipart/form-data"
+            >
+
+                {% csrf_token %}
+
+
+                <!-- =================================================
+                     FORM ERRORS
+                ================================================== -->
+
+                {% if form.non_field_errors %}
+
+                    <div class="form-error-box">
+
+                        {% for error in form.non_field_errors %}
+
+                            <p>
+                                {{ error }}
+                            </p>
+
+                        {% endfor %}
+
+                    </div>
+
+                {% endif %}
+
+
+                <!-- =================================================
+                     COURSE TITLE
+                ================================================== -->
+
+                <div class="form-group">
+
+                    <label for="{{ form.title.id_for_label }}">
+                        Course Title
+                    </label>
+
+                    {{ form.title }}
+
+                    {% if form.title.errors %}
+
+                        <div class="field-error">
+
+                            {% for error in form.title.errors %}
+                                {{ error }}
+                            {% endfor %}
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+
+                <!-- =================================================
+                     SLUG
+                ================================================== -->
+
+                <div class="form-group">
+
+                    <label for="{{ form.slug.id_for_label }}">
+                        Course Slug
+                    </label>
+
+                    {{ form.slug }}
+
+                    <small>
+                        Example:
+                        power-bi-data-analytics
+                    </small>
+
+                    {% if form.slug.errors %}
+
+                        <div class="field-error">
+
+                            {% for error in form.slug.errors %}
+                                {{ error }}
+                            {% endfor %}
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+
+                <!-- =================================================
+                     SHORT DESCRIPTION
+                ================================================== -->
+
+                <div class="form-group">
+
+                    <label for="{{ form.short_description.id_for_label }}">
+                        Short Description
+                    </label>
+
+                    {{ form.short_description }}
+
+                    {% if form.short_description.errors %}
+
+                        <div class="field-error">
+
+                            {% for error in form.short_description.errors %}
+                                {{ error }}
+                            {% endfor %}
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+
+                <!-- =================================================
+                     FULL DESCRIPTION
+                ================================================== -->
+
+                <div class="form-group">
+
+                    <label for="{{ form.description.id_for_label }}">
+                        Course Description
+                    </label>
+
+                    {{ form.description }}
+
+                    {% if form.description.errors %}
+
+                        <div class="field-error">
+
+                            {% for error in form.description.errors %}
+                                {{ error }}
+                            {% endfor %}
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+
+                <!-- =================================================
+                     CATEGORY + DURATION
+                ================================================== -->
+
+                <div class="form-grid">
+
+                    <div class="form-group">
+
+                        <label for="{{ form.category.id_for_label }}">
+                            Category
+                        </label>
+
+                        {{ form.category }}
+
+                        {% if form.category.errors %}
+
+                            <div class="field-error">
+
+                                {% for error in form.category.errors %}
+                                    {{ error }}
+                                {% endfor %}
+
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="{{ form.duration.id_for_label }}">
+                            Duration
+                        </label>
+
+                        {{ form.duration }}
+
+                        {% if form.duration.errors %}
+
+                            <div class="field-error">
+
+                                {% for error in form.duration.errors %}
+                                    {{ error }}
+                                {% endfor %}
+
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+                     LEVEL + PRICE
+                ================================================== -->
+
+                <div class="form-grid">
+
+                    <div class="form-group">
+
+                        <label for="{{ form.level.id_for_label }}">
+                            Level
+                        </label>
+
+                        {{ form.level }}
+
+                        {% if form.level.errors %}
+
+                            <div class="field-error">
+
+                                {% for error in form.level.errors %}
+                                    {{ error }}
+                                {% endfor %}
+
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="{{ form.price.id_for_label }}">
+                            Course Price
+                        </label>
+
+                        {{ form.price }}
+
+                        {% if form.price.errors %}
+
+                            <div class="field-error">
+
+                                {% for error in form.price.errors %}
+                                    {{ error }}
+                                {% endfor %}
+
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+                     INSTRUCTOR
+                ================================================== -->
+
+                <div class="form-group">
+
+                    <label for="{{ form.instructor.id_for_label }}">
+                        Instructor
+                    </label>
+
+                    {{ form.instructor }}
+
+                    {% if form.instructor.errors %}
+
+                        <div class="field-error">
+
+                            {% for error in form.instructor.errors %}
+                                {{ error }}
+                            {% endfor %}
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+
+                <!-- =================================================
+                     COURSE IMAGE
+                ================================================== -->
+
+                <div class="form-group">
+
+                    <label for="{{ form.image.id_for_label }}">
+                        Course Image
+                    </label>
+
+                    {{ form.image }}
+
+                    {% if course and course.image %}
+
+                        <div class="current-image">
+
+                            <p>
+                                Current Image:
+                            </p>
+
+                            <img
+                                src="{{ course.image.url }}"
+                                alt="{{ course.title }}"
+                            >
+
+                        </div>
+
+                    {% endif %}
+
+                    {% if form.image.errors %}
+
+                        <div class="field-error">
+
+                            {% for error in form.image.errors %}
+                                {{ error }}
+                            {% endfor %}
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+
+                <!-- =================================================
+                     ACTIVE STATUS
+                ================================================== -->
+
+                <div class="form-checkbox">
+
+                    {{ form.is_active }}
+
+                    <label for="{{ form.is_active.id_for_label }}">
+                        Course is Active
+                    </label>
+
+                </div>
+
+
+                <!-- =================================================
+                     ACTIONS
+                ================================================== -->
+
+                <div class="form-actions">
+
+                    <button
+                        type="submit"
+                        class="primary-btn"
+                    >
+                        {{ button_text }}
+                    </button>
+
+
+                    <a
+                        href="{% url 'admin_course_management' %}"
+                        class="secondary-btn"
+                    >
+                        Cancel
+                    </a>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<style>
+
+/* ============================================================
+   ADMIN FORM PAGE
+============================================================ */
+
+.admin-page {
+    padding: 60px 0 80px;
+    background: #f5f8ff;
+    min-height: 100vh;
+}
+
+
+.admin-header {
+    margin-bottom: 35px;
+}
+
+
+.admin-header h1 {
+    margin: 10px 0;
+    font-size: 42px;
+    color: #14213d;
+}
+
+
+.admin-header p {
+    color: #64748b;
+    font-size: 17px;
+}
+
+
+/* ============================================================
+   FORM CARD
+============================================================ */
+
+.admin-form-card {
+    max-width: 900px;
+    margin: 0 auto;
+
+    background: white;
+
+    padding: 40px;
+
+    border-radius: 20px;
+
+    box-shadow:
+        0 10px 35px rgba(20, 33, 61, 0.07);
+}
+
+
+/* ============================================================
+   FORM GROUP
+============================================================ */
+
+.form-group {
+    margin-bottom: 24px;
+}
+
+
+.form-group label {
+    display: block;
+
+    margin-bottom: 8px;
+
+    font-weight: 700;
+
+    color: #14213d;
+}
+
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+
+    width: 100%;
+
+    box-sizing: border-box;
+
+    padding: 13px 15px;
+
+    border: 1px solid #d8e0ec;
+
+    border-radius: 9px;
+
+    font-size: 15px;
+
+    font-family: inherit;
+
+    background: white;
+
+    color: #14213d;
+
+}
+
+
+.form-group textarea {
+    resize: vertical;
+}
+
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+
+    outline: none;
+
+    border-color: #174ea6;
+
+    box-shadow:
+        0 0 0 3px rgba(23, 78, 166, 0.10);
+
+}
+
+
+.form-group small {
+
+    display: block;
+
+    margin-top: 6px;
+
+    color: #64748b;
+
+    font-size: 13px;
+}
+
+
+/* ============================================================
+   TWO COLUMN FORM
+============================================================ */
+
+.form-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 20px;
+}
+
+
+/* ============================================================
+   CHECKBOX
+============================================================ */
+
+.form-checkbox {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    margin: 10px 0 30px;
+
+}
+
+
+.form-checkbox input {
+
+    width: 18px;
+    height: 18px;
+
+}
+
+
+.form-checkbox label {
+
+    font-weight: 700;
+
+    color: #14213d;
+}
+
+
+/* ============================================================
+   CURRENT IMAGE
+============================================================ */
+
+.current-image {
+
+    margin-top: 15px;
+
+    padding: 15px;
+
+    background: #f5f8ff;
+
+    border-radius: 10px;
+}
+
+
+.current-image p {
+
+    margin-top: 0;
+
+    font-weight: 700;
+
+    color: #475569;
+}
+
+
+.current-image img {
+
+    width: 180px;
+
+    height: 120px;
+
+    object-fit: cover;
+
+    border-radius: 10px;
+}
+
+
+/* ============================================================
+   ERRORS
+============================================================ */
+
+.form-error-box {
+
+    padding: 15px 18px;
+
+    margin-bottom: 25px;
+
+    background: #fee2e2;
+
+    color: #991b1b;
+
+    border-radius: 10px;
+}
+
+
+.form-error-box p {
+
+    margin: 4px 0;
+
+}
+
+
+.field-error {
+
+    margin-top: 6px;
+
+    color: #dc2626;
+
+    font-size: 13px;
+
+}
+
+
+/* ============================================================
+   BUTTONS
+============================================================ */
+
+.form-actions {
+
+    display: flex;
+
+    gap: 15px;
+
+    align-items: center;
+
+    margin-top: 30px;
+
+}
+
+
+.primary-btn,
+.secondary-btn {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 12px 22px;
+
+    border-radius: 9px;
+
+    text-decoration: none;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+}
+
+
+.primary-btn {
+
+    border: none;
+
+    background: #174ea6;
+
+    color: white;
+
+}
+
+
+.secondary-btn {
+
+    background: white;
+
+    color: #174ea6;
+
+    border: 1px solid #174ea6;
+
+}
+
+
+/* ============================================================
+   RESPONSIVE
+============================================================ */
+
+@media (max-width: 700px) {
+
+    .admin-form-card {
+
+        padding: 25px 20px;
+
+    }
+
+    .admin-header h1 {
+
+        font-size: 32px;
+
+    }
+
+    .form-grid {
+
+        grid-template-columns: 1fr;
+
+    }
+
+    .form-actions {
+
+        flex-direction: column;
+
+        align-items: stretch;
+
+    }
+
+}
+
+</style>
+
+{% endblock %}

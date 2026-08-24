@@ -1,0 +1,262 @@
+{% extends "lms/base.html" %}
+
+{% block title %}
+Delete Course | Kameera Technologies
+{% endblock %}
+
+{% block content %}
+
+<section class="admin-page">
+
+    <div class="container">
+
+        <div class="delete-card">
+
+            <!-- =================================================
+                 WARNING ICON
+            ================================================== -->
+
+            <div class="delete-icon">
+                ⚠️
+            </div>
+
+
+            <!-- =================================================
+                 TITLE
+            ================================================== -->
+
+            <h1>
+                Delete Course?
+            </h1>
+
+
+            <p class="delete-message">
+
+                Are you sure you want to permanently delete:
+
+            </p>
+
+
+            <h2>
+                "{{ course.title }}"
+            </h2>
+
+
+            <p class="delete-warning">
+
+                This action cannot be undone.
+
+                All lessons, enrollments, progress records,
+                and related course data may also be affected.
+
+            </p>
+
+
+            <!-- =================================================
+                 DELETE FORM
+            ================================================== -->
+
+            <form
+                method="POST"
+            >
+
+                {% csrf_token %}
+
+
+                <div class="delete-actions">
+
+                    <button
+                        type="submit"
+                        class="danger-btn"
+                    >
+                        🗑️ Yes, Delete Course
+                    </button>
+
+
+                    <a
+                        href="{% url 'admin_course_management' %}"
+                        class="secondary-btn"
+                    >
+                        Cancel
+                    </a>
+
+                </div>
+
+            </form>
+
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<style>
+
+/* ============================================================
+   DELETE PAGE
+============================================================ */
+
+.admin-page {
+
+    min-height: 80vh;
+
+    padding: 80px 20px;
+
+    background: #f5f8ff;
+
+}
+
+
+.delete-card {
+
+    max-width: 650px;
+
+    margin: 0 auto;
+
+    background: white;
+
+    padding: 50px;
+
+    border-radius: 22px;
+
+    text-align: center;
+
+    box-shadow:
+        0 15px 40px rgba(20, 33, 61, 0.08);
+
+}
+
+
+.delete-icon {
+
+    font-size: 55px;
+
+    margin-bottom: 15px;
+
+}
+
+
+.delete-card h1 {
+
+    margin: 0 0 20px;
+
+    color: #991b1b;
+
+    font-size: 34px;
+
+}
+
+
+.delete-message {
+
+    color: #64748b;
+
+    font-size: 17px;
+
+}
+
+
+.delete-card h2 {
+
+    color: #14213d;
+
+    margin: 15px 0 25px;
+
+}
+
+
+.delete-warning {
+
+    background: #fff7ed;
+
+    color: #9a3412;
+
+    padding: 18px;
+
+    border-radius: 10px;
+
+    line-height: 1.6;
+
+    margin-bottom: 30px;
+
+}
+
+
+.delete-actions {
+
+    display: flex;
+
+    justify-content: center;
+
+    gap: 15px;
+
+    flex-wrap: wrap;
+
+}
+
+
+.danger-btn {
+
+    border: none;
+
+    background: #dc2626;
+
+    color: white;
+
+    padding: 13px 22px;
+
+    border-radius: 9px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+}
+
+
+.secondary-btn {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 13px 22px;
+
+    border-radius: 9px;
+
+    border: 1px solid #174ea6;
+
+    color: #174ea6;
+
+    background: white;
+
+    text-decoration: none;
+
+    font-weight: 700;
+
+}
+
+
+@media (max-width: 600px) {
+
+    .delete-card {
+
+        padding: 35px 20px;
+
+    }
+
+    .delete-actions {
+
+        flex-direction: column;
+
+    }
+
+}
+
+</style>
+
+{% endblock %}

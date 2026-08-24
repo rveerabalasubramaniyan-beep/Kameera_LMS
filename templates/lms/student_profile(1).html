@@ -1,0 +1,43 @@
+{% extends "lms/base.html" %}
+
+{% block content %}
+<div style="max-width: 900px; margin: 50px auto; padding: 0 20px;">
+    {% if messages %}
+        {% for message in messages %}
+            <div style="padding: 14px 18px; margin-bottom: 15px; border-radius: 10px; background: #eef5ff; color: #163a70;">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <div style="display:flex; justify-content:space-between; align-items:center; gap:20px; margin-bottom:25px; flex-wrap:wrap;">
+        <div>
+            <h1 style="margin:0; color:#17233f;">My Profile</h1>
+            <p style="color:#64748b; margin-top:8px;">View and manage your Kameera Technologies student account.</p>
+        </div>
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+            <a href="{% url 'student_profile_edit' %}" style="padding:11px 18px; background:#1f55ad; color:white; text-decoration:none; border-radius:8px; font-weight:600;">Edit Profile</a>
+            <a href="{% url 'student_change_password' %}" style="padding:11px 18px; background:#eef3fb; color:#1f55ad; text-decoration:none; border-radius:8px; font-weight:600;">Change Password</a>
+        </div>
+    </div>
+
+    <div style="background:white; border:1px solid #e2e8f0; border-radius:16px; padding:30px; box-shadow:0 8px 30px rgba(15,23,42,.06);">
+        <h2 style="margin-top:0; color:#17233f;">Personal Information</h2>
+        <hr style="border:0; border-top:1px solid #e5e7eb; margin:20px 0;">
+
+        <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:22px;">
+            <div><strong>Username</strong><p>{{ student.username }}</p></div>
+            <div><strong>First Name</strong><p>{{ student.first_name|default:"Not provided" }}</p></div>
+            <div><strong>Last Name</strong><p>{{ student.last_name|default:"Not provided" }}</p></div>
+            <div><strong>Email</strong><p>{{ student.email|default:"Not provided" }}</p></div>
+            <div><strong>Phone</strong><p>{{ profile.phone|default:"Not provided" }}</p></div>
+            <div><strong>Qualification</strong><p>{{ profile.get_qualification_display|default:profile.qualification }}</p></div>
+            <div style="grid-column:1/-1;"><strong>College / Company</strong><p>{{ profile.college_company|default:"Not provided" }}</p></div>
+        </div>
+
+        <div style="margin-top:25px;">
+            <a href="{% url 'student_dashboard' %}" style="color:#1f55ad; text-decoration:none; font-weight:600;">← Back to Dashboard</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

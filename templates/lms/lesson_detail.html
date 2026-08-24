@@ -1,0 +1,503 @@
+{% extends "lms/base.html" %}
+
+
+{% block title %}
+    {{ lesson.title }} | {{ course.title }} | Kameera Technologies
+{% endblock %}
+
+
+{% block content %}
+
+<section class="learning-page">
+
+    <div class="container">
+
+
+        <!-- ====================================================
+             BREADCRUMB
+        ===================================================== -->
+
+        <div class="learning-breadcrumb">
+
+            <a href="{% url 'student_dashboard' %}">
+                ← Dashboard
+            </a>
+
+            <span>/</span>
+
+            <a href="{% url 'course_learning' course.slug %}">
+                {{ course.title }}
+            </a>
+
+            <span>/</span>
+
+            <span>
+                Lesson {{ lesson.lesson_number }}
+            </span>
+
+        </div>
+
+
+        <!-- ====================================================
+             LESSON HEADER
+        ===================================================== -->
+
+        <div class="learning-card">
+
+            <span class="section-label">
+                LESSON {{ lesson.lesson_number }}
+            </span>
+
+            <h1>
+                {{ lesson.title }}
+            </h1>
+
+            {% if lesson.description %}
+
+                <p>
+                    {{ lesson.description }}
+                </p>
+
+            {% else %}
+
+                <p>
+                    Welcome to this lesson.
+                </p>
+
+            {% endif %}
+
+        </div>
+
+
+        <!-- ====================================================
+             VIDEO LESSON
+        ===================================================== -->
+
+        <div class="learning-card">
+
+            <h2>
+                Video Lesson
+            </h2>
+
+
+            {% if lesson.video_url %}
+
+                <div
+                    style="
+                        margin-top:20px;
+                        padding:25px;
+                        background:#f5f8ff;
+                        border-radius:12px;
+                    "
+                >
+
+                    <p>
+                        Your video lesson is ready.
+                    </p>
+
+                    <a
+                        href="{{ lesson.video_url }}"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="primary-btn"
+                    >
+                        ▶ Watch Video
+                    </a>
+
+                </div>
+
+            {% else %}
+
+                <div
+                    style="
+                        margin-top:20px;
+                        padding:25px;
+                        background:#f5f8ff;
+                        border-radius:12px;
+                    "
+                >
+
+                    <h3>
+                        Video Coming Soon
+                    </h3>
+
+                    <p>
+                        The video for this lesson has not
+                        been uploaded yet.
+                    </p>
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+
+        <!-- ====================================================
+             PDF / STUDY MATERIAL
+        ===================================================== -->
+
+        {% if lesson.pdf_file %}
+
+            <div class="learning-card">
+
+                <h2>
+                    Study Material
+                </h2>
+
+                <p>
+                    Download or open the PDF material
+                    for this lesson.
+                </p>
+
+                <a
+                    href="{{ lesson.pdf_file.url }}"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="primary-btn"
+                >
+                    📄 Open Lesson PDF
+                </a>
+
+            </div>
+
+        {% endif %}
+
+
+        <!-- ====================================================
+             LESSON PROGRESS
+        ===================================================== -->
+
+        <div class="learning-card">
+
+            <h2>
+                Lesson Progress
+            </h2>
+
+
+            {% if is_completed %}
+
+                <!-- ============================================
+                     COMPLETED
+                ============================================= -->
+
+                <div
+                    style="
+                        margin-top:20px;
+                        padding:25px;
+                        background:#eaf8ef;
+                        border-radius:12px;
+                    "
+                >
+
+                    <h3>
+                        ✓ Lesson Completed
+                    </h3>
+
+                    <p>
+                        You have completed this lesson.
+                    </p>
+
+                </div>
+
+
+            {% else %}
+
+                <!-- ============================================
+                     NOT COMPLETED
+                ============================================= -->
+
+                <div
+                    style="
+                        margin-top:20px;
+                        padding:25px;
+                        background:#f5f8ff;
+                        border-radius:12px;
+                    "
+                >
+
+                    <h3>
+                        Complete this lesson
+                    </h3>
+
+                    <p>
+                        Finish studying this lesson and then
+                        mark it as completed.
+                    </p>
+
+
+                    <form
+                        method="post"
+                        style="margin-top:20px;"
+                    >
+
+                        {% csrf_token %}
+
+                        <button
+                            type="submit"
+                            class="primary-btn"
+                        >
+                            ✓ Mark Lesson as Complete
+                        </button>
+
+                    </form>
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+
+        <!-- ====================================================
+             COURSE PROGRESS
+        ===================================================== -->
+
+        <div class="learning-card">
+
+            <h2>
+                Course Progress
+            </h2>
+
+
+            <div
+                style="
+                    margin-top:20px;
+                "
+            >
+
+                <div
+                    style="
+                        display:flex;
+                        justify-content:space-between;
+                        margin-bottom:8px;
+                    "
+                >
+
+                    <span>
+                        Progress
+                    </span>
+
+                    <strong>
+                        {{ progress_percentage }}%
+                    </strong>
+
+                </div>
+
+
+                <div
+                    style="
+                        width:100%;
+                        height:12px;
+                        background:#e5e7eb;
+                        border-radius:10px;
+                        overflow:hidden;
+                    "
+                >
+
+                    <div
+                        style="
+                            width:{{ progress_percentage }}%;
+                            height:100%;
+                            background:#2563eb;
+                            border-radius:10px;
+                        "
+                    ></div>
+
+                </div>
+
+
+                <p
+                    style="
+                        margin-top:12px;
+                    "
+                >
+                    {{ completed_lessons }}
+                    of
+                    {{ total_lessons }}
+                    lesson{{ total_lessons|pluralize }}
+                    completed.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- ====================================================
+             LESSON INFORMATION
+        ===================================================== -->
+
+        <div class="learning-card">
+
+            <h2>
+                Lesson Information
+            </h2>
+
+
+            <div
+                style="
+                    display:grid;
+                    grid-template-columns:
+                        repeat(auto-fit, minmax(180px, 1fr));
+                    gap:20px;
+                    margin-top:20px;
+                "
+            >
+
+
+                <!-- COURSE -->
+
+                <div>
+
+                    <strong>
+                        Course
+                    </strong>
+
+                    <p>
+                        {{ course.title }}
+                    </p>
+
+                </div>
+
+
+                <!-- LESSON -->
+
+                <div>
+
+                    <strong>
+                        Lesson
+                    </strong>
+
+                    <p>
+                        {{ lesson.lesson_number }}
+                    </p>
+
+                </div>
+
+
+                <!-- STATUS -->
+
+                <div>
+
+                    <strong>
+                        Status
+                    </strong>
+
+                    {% if is_completed %}
+
+                        <p>
+                            ✓ Completed
+                        </p>
+
+                    {% else %}
+
+                        <p>
+                            In Progress
+                        </p>
+
+                    {% endif %}
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+
+        <!-- ====================================================
+             PREVIOUS / NEXT LESSON
+        ===================================================== -->
+
+        <div class="learning-card">
+
+            <h2>
+                Continue Learning
+            </h2>
+
+
+            <div
+                style="
+                    display:flex;
+                    justify-content:space-between;
+                    align-items:center;
+                    gap:15px;
+                    flex-wrap:wrap;
+                    margin-top:20px;
+                "
+            >
+
+
+                <!-- PREVIOUS LESSON -->
+
+                {% if previous_lesson %}
+
+                    <a
+                        href="{% url 'lesson_detail' course.slug previous_lesson.id %}"
+                        class="secondary-btn"
+                    >
+                        ← Previous Lesson
+                    </a>
+
+                {% else %}
+
+                    <span></span>
+
+                {% endif %}
+
+
+                <!-- NEXT LESSON -->
+
+                {% if next_lesson %}
+
+                    <a
+                        href="{% url 'lesson_detail' course.slug next_lesson.id %}"
+                        class="primary-btn"
+                    >
+                        Next Lesson →
+                    </a>
+
+                {% else %}
+
+                    <a
+                        href="{% url 'course_learning' course.slug %}"
+                        class="primary-btn"
+                    >
+                        Finish Course Content ✓
+                    </a>
+
+                {% endif %}
+
+
+            </div>
+
+        </div>
+
+
+        <!-- ====================================================
+             BACK TO COURSE
+        ===================================================== -->
+
+        <div
+            style="
+                margin-top:25px;
+                margin-bottom:40px;
+            "
+        >
+
+            <a
+                href="{% url 'course_learning' course.slug %}"
+                class="secondary-btn"
+            >
+                ← Back to Course Content
+            </a>
+
+        </div>
+
+
+    </div>
+
+</section>
+
+{% endblock %}

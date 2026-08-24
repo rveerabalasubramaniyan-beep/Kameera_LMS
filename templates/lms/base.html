@@ -1,0 +1,237 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        {% block title %}
+            Kameera Technologies
+        {% endblock %}
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="{% static 'css/style.css' %}"
+    >
+
+</head>
+
+
+<body>
+
+
+<!-- ============================================================
+     NAVBAR
+============================================================ -->
+
+<header class="navbar">
+
+    <div class="container nav-container">
+
+
+        <!-- LOGO -->
+
+        <a
+            href="{% url 'home' %}"
+            class="logo"
+        >
+
+            <span class="logo-main">
+                KAMEERA
+            </span>
+
+            <span class="logo-sub">
+                TECHNOLOGIES
+            </span>
+
+        </a>
+
+
+        <!-- =====================================================
+             NAVIGATION
+        ====================================================== -->
+
+        <nav class="main-nav">
+
+
+            <!-- HOME -->
+
+            <a href="{% url 'home' %}">
+                Home
+            </a>
+
+
+            <!-- COURSES -->
+
+            <a href="{% url 'course_list' %}">
+                Courses
+            </a>
+
+
+            <!-- ABOUT -->
+
+            <a href="{% url 'home' %}#about">
+                About
+            </a>
+
+
+            <!-- CONTACT -->
+
+            <a href="{% url 'home' %}#contact">
+                Contact
+            </a>
+
+
+            {% if user.is_authenticated %}
+
+                <!-- =================================================
+                     LOGGED-IN USER
+                ================================================== -->
+
+
+                <!-- DASHBOARD -->
+
+                <a
+                    href="{% url 'student_dashboard' %}"
+                    class="dashboard-btn"
+                >
+                    Dashboard
+                </a>
+
+
+                <!-- LOGOUT -->
+
+                <form
+                    method="post"
+                    action="{% url 'logout' %}"
+                    class="logout-form"
+                >
+
+                    {% csrf_token %}
+
+                    <button
+                        type="submit"
+                        class="logout-btn"
+                    >
+                        Logout
+                    </button>
+
+                </form>
+
+
+            {% else %}
+
+                <!-- =================================================
+                     LOGGED-OUT USER
+                ================================================== -->
+
+
+                <!-- LOGIN -->
+
+                <a
+                    href="{% url 'student_login' %}"
+                    class="login-btn"
+                >
+                    Login
+                </a>
+
+
+                <!-- REGISTER -->
+
+                <a
+                    href="{% url 'student_register' %}"
+                    class="register-btn"
+                >
+                    Register
+                </a>
+
+
+            {% endif %}
+
+
+        </nav>
+
+    </div>
+
+</header>
+
+
+
+<!-- ============================================================
+     MAIN CONTENT
+============================================================ -->
+
+<main>
+
+    {% block content %}
+
+    {% endblock %}
+
+</main>
+
+
+
+<!-- ============================================================
+     FOOTER
+============================================================ -->
+
+<footer class="footer">
+
+    <div class="container footer-content">
+
+
+        <!-- COMPANY -->
+
+        <div>
+
+            <h3>
+                KAMEERA TECHNOLOGIES
+            </h3>
+
+            <p>
+                Data is Everything!!!
+            </p>
+
+        </div>
+
+
+        <!-- COPYRIGHT -->
+
+        <div>
+
+            <p>
+                © 2026 Kameera Technologies
+            </p>
+
+            <p>
+                All Rights Reserved.
+            </p>
+
+        </div>
+
+
+    </div>
+
+</footer>
+
+
+
+<!-- ============================================================
+     JAVASCRIPT
+============================================================ -->
+
+<script src="{% static 'js/script.js' %}"></script>
+
+
+</body>
+
+</html>

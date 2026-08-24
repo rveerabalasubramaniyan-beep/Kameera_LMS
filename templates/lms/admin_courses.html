@@ -1,0 +1,937 @@
+{% extends "lms/base.html" %}
+
+{% block title %}
+Course Management | Kameera Technologies
+{% endblock %}
+
+{% block content %}
+
+<section class="admin-page">
+
+    <div class="container">
+
+
+        <!-- =====================================================
+             HEADER
+        ====================================================== -->
+
+        <div class="admin-header">
+
+            <div>
+
+                <span class="section-label">
+                    KAMEERA TECHNOLOGIES
+                </span>
+
+                <h1>
+                    Course Management
+                </h1>
+
+                <p>
+                    Create, update and manage all courses available
+                    on the Kameera LMS platform.
+                </p>
+
+            </div>
+
+
+            <div>
+
+                <a
+                    href="{% url 'admin_course_add' %}"
+                    class="primary-btn"
+                >
+                    + Add New Course
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================================
+             COURSE COUNT
+        ====================================================== -->
+
+        <div class="dashboard-stats">
+
+
+            <!-- TOTAL COURSES -->
+
+            <div class="dashboard-stat">
+
+                <span class="stat-label">
+                    Total Courses
+                </span>
+
+                <strong class="stat-value">
+                    {{ courses|length }}
+                </strong>
+
+            </div>
+
+
+            <!-- ACTIVE COURSES -->
+
+            <div class="dashboard-stat">
+
+                <span class="stat-label">
+                    Active Courses
+                </span>
+
+                <strong class="stat-value">
+                    {{ active_courses }}
+                </strong>
+
+            </div>
+
+
+            <!-- INACTIVE COURSES -->
+
+            <div class="dashboard-stat">
+
+                <span class="stat-label">
+                    Inactive Courses
+                </span>
+
+                <strong class="stat-value">
+                    {{ inactive_courses }}
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================================
+             COURSES
+        ====================================================== -->
+
+        <div class="admin-section">
+
+
+            <div class="section-heading">
+
+                <div>
+
+                    <span class="section-label">
+                        COURSE CATALOG
+                    </span>
+
+                    <h2>
+                        All Courses
+                    </h2>
+
+                </div>
+
+            </div>
+
+
+            {% if courses %}
+
+
+                <div class="admin-course-list">
+
+
+                    {% for course in courses %}
+
+
+                        <article class="admin-course-card">
+
+
+                            <!-- =================================================
+                                 IMAGE
+                            ================================================== -->
+
+                            <div class="admin-course-image">
+
+                                {% if course.image %}
+
+                                    <img
+                                        src="{{ course.image.url }}"
+                                        alt="{{ course.title }}"
+                                    >
+
+                                {% else %}
+
+                                    <div class="course-placeholder">
+                                        📚
+                                    </div>
+
+                                {% endif %}
+
+                            </div>
+
+
+                            <!-- =================================================
+                                 COURSE DETAILS
+                            ================================================== -->
+
+                            <div class="admin-course-content">
+
+
+                                <div class="course-title-row">
+
+                                    <h3>
+                                        {{ course.title }}
+                                    </h3>
+
+
+                                    {% if course.is_active %}
+
+                                        <span class="status-active">
+                                            Active
+                                        </span>
+
+                                    {% else %}
+
+                                        <span class="status-inactive">
+                                            Inactive
+                                        </span>
+
+                                    {% endif %}
+
+                                </div>
+
+
+                                <p>
+                                    {{ course.short_description }}
+                                </p>
+
+
+                                <!-- COURSE META -->
+
+                                <div class="course-meta">
+
+                                    <span>
+                                        📂 {{ course.category }}
+                                    </span>
+
+                                    <span>
+                                        ⏱ {{ course.duration }}
+                                    </span>
+
+                                    <span>
+                                        🎓 {{ course.level }}
+                                    </span>
+
+                                    <span>
+                                        💰 ₹{{ course.price }}
+                                    </span>
+
+                                </div>
+
+
+                                <!-- INSTRUCTOR -->
+
+                                <div class="course-instructor">
+
+                                    👨‍🏫
+                                    Instructor:
+
+                                    <strong>
+                                        {{ course.instructor }}
+                                    </strong>
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- =================================================
+                                 ACTIONS
+                            ================================================== -->
+
+                            <div class="admin-course-actions">
+
+
+                                <!-- =================================================
+                                     MANAGE LESSONS
+                                ================================================== -->
+
+                                <a
+                                    href="{% url 'admin_lesson_management' course.id %}"
+                                    class="primary-btn"
+                                >
+                                    📚 Lessons
+                                </a>
+
+
+                                <!-- =================================================
+                                     EDIT COURSE
+                                ================================================== -->
+
+                                <a
+                                    href="{% url 'admin_course_edit' course.id %}"
+                                    class="secondary-btn"
+                                >
+                                    ✏️ Edit
+                                </a>
+
+
+                                <!-- =================================================
+                                     ACTIVATE / DEACTIVATE
+                                ================================================== -->
+
+                                {% if course.is_active %}
+
+                                    <a
+                                        href="{% url 'admin_course_toggle' course.id %}"
+                                        class="warning-btn"
+                                    >
+                                        🔴 Deactivate
+                                    </a>
+
+                                {% else %}
+
+                                    <a
+                                        href="{% url 'admin_course_toggle' course.id %}"
+                                        class="success-btn"
+                                    >
+                                        🟢 Activate
+                                    </a>
+
+                                {% endif %}
+
+
+                                <!-- =================================================
+                                     DELETE COURSE
+                                ================================================== -->
+
+                                <a
+                                    href="{% url 'admin_course_delete' course.id %}"
+                                    class="danger-btn"
+                                    onclick="return confirm(
+                                        'Are you sure you want to delete this course?'
+                                    );"
+                                >
+                                    🗑️ Delete
+                                </a>
+
+
+                            </div>
+
+
+                        </article>
+
+
+                    {% endfor %}
+
+
+                </div>
+
+
+            {% else %}
+
+
+                <!-- =================================================
+                     EMPTY STATE
+                ================================================== -->
+
+                <div class="empty-state">
+
+
+                    <div class="empty-icon">
+                        📚
+                    </div>
+
+
+                    <h2>
+                        No Courses Found
+                    </h2>
+
+
+                    <p>
+                        There are currently no courses in the LMS.
+                        Create your first course to get started.
+                    </p>
+
+
+                    <a
+                        href="{% url 'admin_course_add' %}"
+                        class="primary-btn"
+                    >
+                        + Add First Course
+                    </a>
+
+
+                </div>
+
+
+            {% endif %}
+
+
+        </div>
+
+
+        <!-- =====================================================
+             BACK
+        ====================================================== -->
+
+        <div class="admin-back">
+
+            <a
+                href="{% url 'admin_dashboard' %}"
+                class="secondary-btn"
+            >
+                ← Back to Admin Dashboard
+            </a>
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+<style>
+
+/* ============================================================
+   ADMIN COURSE PAGE
+============================================================ */
+
+.admin-page {
+
+    padding: 70px 0;
+
+    background: #f5f8ff;
+
+    min-height: 100vh;
+
+}
+
+
+/* ============================================================
+   HEADER
+============================================================ */
+
+.admin-header {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    gap: 30px;
+
+    margin-bottom: 45px;
+
+}
+
+
+.admin-header h1 {
+
+    margin: 10px 0;
+
+    font-size: 48px;
+
+    color: #14213d;
+
+}
+
+
+.admin-header p {
+
+    font-size: 18px;
+
+    color: #64748b;
+
+    max-width: 700px;
+
+}
+
+
+/* ============================================================
+   STATS
+============================================================ */
+
+.dashboard-stats {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 25px;
+
+    margin-bottom: 45px;
+
+}
+
+
+.dashboard-stat {
+
+    background: white;
+
+    padding: 30px;
+
+    border-radius: 20px;
+
+    box-shadow:
+        0 10px 30px rgba(20, 33, 61, 0.06);
+
+}
+
+
+.stat-label {
+
+    display: block;
+
+    color: #64748b;
+
+    margin-bottom: 10px;
+
+}
+
+
+.stat-value {
+
+    font-size: 32px;
+
+    color: #174ea6;
+
+}
+
+
+/* ============================================================
+   SECTION
+============================================================ */
+
+.admin-section {
+
+    background: white;
+
+    padding: 35px;
+
+    border-radius: 24px;
+
+    box-shadow:
+        0 10px 35px rgba(20, 33, 61, 0.06);
+
+}
+
+
+.section-heading {
+
+    margin-bottom: 30px;
+
+}
+
+
+.section-heading h2 {
+
+    color: #14213d;
+
+    font-size: 30px;
+
+    margin-top: 8px;
+
+}
+
+
+/* ============================================================
+   COURSE CARD
+============================================================ */
+
+.admin-course-list {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 22px;
+
+}
+
+
+.admin-course-card {
+
+    display: grid;
+
+    grid-template-columns:
+        150px
+        1fr
+        auto;
+
+    gap: 25px;
+
+    align-items: center;
+
+    padding: 25px;
+
+    border: 1px solid #e5eaf2;
+
+    border-radius: 18px;
+
+    transition: 0.2s ease;
+
+}
+
+
+.admin-course-card:hover {
+
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 10px 30px rgba(20, 33, 61, 0.08);
+
+}
+
+
+/* ============================================================
+   IMAGE
+============================================================ */
+
+.admin-course-image {
+
+    width: 150px;
+
+    height: 110px;
+
+    overflow: hidden;
+
+    border-radius: 14px;
+
+    background: #eef3ff;
+
+}
+
+
+.admin-course-image img {
+
+    width: 100%;
+
+    height: 100%;
+
+    object-fit: cover;
+
+}
+
+
+.course-placeholder {
+
+    width: 100%;
+
+    height: 100%;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-size: 42px;
+
+}
+
+
+/* ============================================================
+   COURSE CONTENT
+============================================================ */
+
+.course-title-row {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 15px;
+
+}
+
+
+.admin-course-content h3 {
+
+    margin: 0;
+
+    font-size: 24px;
+
+    color: #14213d;
+
+}
+
+
+.admin-course-content p {
+
+    color: #64748b;
+
+    margin:
+        10px 0 15px;
+
+    line-height: 1.6;
+
+}
+
+
+.course-meta {
+
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 12px;
+
+    margin-bottom: 12px;
+
+}
+
+
+.course-meta span {
+
+    background: #f1f5ff;
+
+    color: #294f9b;
+
+    padding:
+        7px 11px;
+
+    border-radius: 8px;
+
+    font-size: 13px;
+
+}
+
+
+.course-instructor {
+
+    color: #64748b;
+
+    font-size: 14px;
+
+}
+
+
+/* ============================================================
+   STATUS
+============================================================ */
+
+.status-active,
+.status-inactive {
+
+    padding:
+        6px 10px;
+
+    border-radius: 20px;
+
+    font-size: 12px;
+
+    font-weight: 700;
+
+}
+
+
+.status-active {
+
+    background: #dcfce7;
+
+    color: #166534;
+
+}
+
+
+.status-inactive {
+
+    background: #fee2e2;
+
+    color: #991b1b;
+
+}
+
+
+/* ============================================================
+   BUTTONS
+============================================================ */
+
+.admin-course-actions {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 8px;
+
+    min-width: 130px;
+
+}
+
+
+.primary-btn,
+.secondary-btn,
+.warning-btn,
+.success-btn,
+.danger-btn {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    text-decoration: none;
+
+    padding:
+        11px 16px;
+
+    border-radius: 9px;
+
+    font-weight: 700;
+
+    border: none;
+
+    cursor: pointer;
+
+}
+
+
+.primary-btn {
+
+    background: #1f52a8;
+
+    color: white;
+
+}
+
+
+.secondary-btn {
+
+    background: white;
+
+    color: #1f52a8;
+
+    border: 1px solid #1f52a8;
+
+}
+
+
+.warning-btn {
+
+    background: #fff7ed;
+
+    color: #c2410c;
+
+}
+
+
+.success-btn {
+
+    background: #dcfce7;
+
+    color: #166534;
+
+}
+
+
+.danger-btn {
+
+    background: #fee2e2;
+
+    color: #b91c1c;
+
+}
+
+
+/* ============================================================
+   EMPTY
+============================================================ */
+
+.empty-state {
+
+    text-align: center;
+
+    padding: 70px 20px;
+
+}
+
+
+.empty-icon {
+
+    font-size: 55px;
+
+    margin-bottom: 15px;
+
+}
+
+
+.empty-state h2 {
+
+    color: #14213d;
+
+}
+
+
+.empty-state p {
+
+    color: #64748b;
+
+    max-width: 500px;
+
+    margin:
+        0 auto 25px;
+
+}
+
+
+/* ============================================================
+   BACK
+============================================================ */
+
+.admin-back {
+
+    margin-top: 30px;
+
+}
+
+
+/* ============================================================
+   RESPONSIVE
+============================================================ */
+
+@media (max-width: 900px) {
+
+    .admin-header {
+
+        flex-direction: column;
+
+        align-items: flex-start;
+
+    }
+
+
+    .dashboard-stats {
+
+        grid-template-columns: 1fr;
+
+    }
+
+
+    .admin-course-card {
+
+        grid-template-columns: 1fr;
+
+    }
+
+
+    .admin-course-image {
+
+        width: 100%;
+
+        height: 180px;
+
+    }
+
+
+    .admin-course-actions {
+
+        flex-direction: row;
+
+        flex-wrap: wrap;
+
+    }
+
+}
+
+</style>
+
+{% endblock %}

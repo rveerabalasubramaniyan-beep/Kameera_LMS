@@ -1,0 +1,65 @@
+{% extends "lms/base.html" %}
+
+{% block content %}
+<div style="max-width: 760px; margin: 50px auto; padding: 0 20px;">
+    <div style="margin-bottom:25px;">
+        <h1 style="margin:0; color:#17233f;">Edit Profile</h1>
+        <p style="color:#64748b; margin-top:8px;">Update your personal and educational information.</p>
+    </div>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div style="padding:14px 18px; margin-bottom:15px; border-radius:10px; background:#fff4e5; color:#8a4b08;">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <div style="background:white; border:1px solid #e2e8f0; border-radius:16px; padding:30px; box-shadow:0 8px 30px rgba(15,23,42,.06);">
+        <form method="post">
+            {% csrf_token %}
+
+            <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:20px;">
+                <div>
+                    <label for="first_name"><strong>First Name</strong></label>
+                    <input id="first_name" name="first_name" type="text" value="{{ student.first_name }}" required style="width:100%; box-sizing:border-box; padding:12px; margin-top:7px; border:1px solid #cbd5e1; border-radius:8px;">
+                </div>
+
+                <div>
+                    <label for="last_name"><strong>Last Name</strong></label>
+                    <input id="last_name" name="last_name" type="text" value="{{ student.last_name }}" style="width:100%; box-sizing:border-box; padding:12px; margin-top:7px; border:1px solid #cbd5e1; border-radius:8px;">
+                </div>
+
+                <div style="grid-column:1/-1;">
+                    <label for="email"><strong>Email</strong></label>
+                    <input id="email" name="email" type="email" value="{{ student.email }}" required style="width:100%; box-sizing:border-box; padding:12px; margin-top:7px; border:1px solid #cbd5e1; border-radius:8px;">
+                </div>
+
+                <div>
+                    <label for="phone"><strong>Phone Number</strong></label>
+                    <input id="phone" name="phone" type="text" value="{{ profile.phone }}" maxlength="15" required style="width:100%; box-sizing:border-box; padding:12px; margin-top:7px; border:1px solid #cbd5e1; border-radius:8px;">
+                </div>
+
+                <div>
+                    <label for="qualification"><strong>Qualification</strong></label>
+                    <select id="qualification" name="qualification" required style="width:100%; box-sizing:border-box; padding:12px; margin-top:7px; border:1px solid #cbd5e1; border-radius:8px;">
+                        {% for value,label in profile.QUALIFICATION_CHOICES %}
+                            <option value="{{ value }}" {% if profile.qualification == value %}selected{% endif %}>{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div style="grid-column:1/-1;">
+                    <label for="college_company"><strong>College / Company</strong></label>
+                    <input id="college_company" name="college_company" type="text" value="{{ profile.college_company }}" maxlength="200" style="width:100%; box-sizing:border-box; padding:12px; margin-top:7px; border:1px solid #cbd5e1; border-radius:8px;">
+                </div>
+            </div>
+
+            <div style="display:flex; gap:12px; margin-top:28px; flex-wrap:wrap;">
+                <button type="submit" style="border:0; padding:12px 22px; background:#1f55ad; color:white; border-radius:8px; font-weight:600; cursor:pointer;">Save Changes</button>
+                <a href="{% url 'student_profile' %}" style="padding:12px 22px; background:#eef3fb; color:#1f55ad; text-decoration:none; border-radius:8px; font-weight:600;">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
