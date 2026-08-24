@@ -2,10 +2,11 @@
 Django settings for KameeraLMS project.
 
 Kameera Technologies LMS
+
 Local development:
     Microsoft SQL Server + Windows Authentication
 
-Deployment:
+Production / Render:
     PostgreSQL through DATABASE_URL
 """
 
@@ -30,10 +31,9 @@ SECRET_KEY = os.environ.get(
     "django-development-secret-key-change-before-production",
 )
 
-DEBUG = os.environ.get(
-    "DEBUG",
-    "True",
-).lower() == "true"
+DEBUG = (
+    os.environ.get("DEBUG", "True").lower() == "true"
+)
 
 
 # ============================================================
@@ -42,7 +42,7 @@ DEBUG = os.environ.get(
 
 allowed_hosts = os.environ.get(
     "ALLOWED_HOSTS",
-    "127.0.0.1,localhost",
+    "127.0.0.1,localhost,kameera-lms.onrender.com",
 )
 
 ALLOWED_HOSTS = [
@@ -53,11 +53,26 @@ ALLOWED_HOSTS = [
 
 
 # ============================================================
+# CSRF TRUSTED ORIGINS
+# ============================================================
+
+csrf_origins = os.environ.get(
+    "CSRF_TRUSTED_ORIGINS",
+    "https://kameera-lms.onrender.com",
+)
+
+CSRF_TRUSTED_ORIGINS = [
+    origin.strip()
+    for origin in csrf_origins.split(",")
+    if origin.strip()
+]
+
+
+# ============================================================
 # APPLICATIONS
 # ============================================================
 
 INSTALLED_APPS = [
-
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -74,7 +89,6 @@ INSTALLED_APPS = [
 # ============================================================
 
 MIDDLEWARE = [
-
     "django.middleware.security.SecurityMiddleware",
 
     "whitenoise.middleware.WhiteNoiseMiddleware",
@@ -105,7 +119,6 @@ ROOT_URLCONF = "KameeraLMS.urls"
 # ============================================================
 
 TEMPLATES = [
-
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
 
@@ -116,9 +129,7 @@ TEMPLATES = [
         "APP_DIRS": True,
 
         "OPTIONS": {
-
             "context_processors": [
-
                 "django.template.context_processors.debug",
 
                 "django.template.context_processors.request",
@@ -167,21 +178,13 @@ if DATABASE_URL:
 else:
 
     DATABASES = {
-
         "default": {
-
             "ENGINE": "mssql",
-
             "NAME": "KameeraLM",
-
             "HOST": "DESKTOP-L7KQ31C",
-
             "OPTIONS": {
-
                 "driver": "ODBC Driver 18 for SQL Server",
-
                 "trusted_connection": "yes",
-
                 "extra_params": (
                     "TrustServerCertificate=yes;"
                 ),
@@ -197,9 +200,7 @@ else:
 if "test" in sys.argv:
 
     DATABASES["default"] = {
-
         "ENGINE": "django.db.backends.sqlite3",
-
         "NAME": BASE_DIR / "test_db.sqlite3",
     }
 
@@ -209,29 +210,28 @@ if "test" in sys.argv:
 # ============================================================
 
 AUTH_PASSWORD_VALIDATORS = [
-
     {
         "NAME":
-        "django.contrib.auth.password_validation."
-        "UserAttributeSimilarityValidator",
+            "django.contrib.auth.password_validation."
+            "UserAttributeSimilarityValidator",
     },
 
     {
         "NAME":
-        "django.contrib.auth.password_validation."
-        "MinimumLengthValidator",
+            "django.contrib.auth.password_validation."
+            "MinimumLengthValidator",
     },
 
     {
         "NAME":
-        "django.contrib.auth.password_validation."
-        "CommonPasswordValidator",
+            "django.contrib.auth.password_validation."
+            "CommonPasswordValidator",
     },
 
     {
         "NAME":
-        "django.contrib.auth.password_validation."
-        "NumericPasswordValidator",
+            "django.contrib.auth.password_validation."
+            "NumericPasswordValidator",
     },
 ]
 
@@ -263,15 +263,14 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 # ============================================================
 
 STORAGES = {
-
     "default": {
         "BACKEND":
-        "django.core.files.storage.FileSystemStorage",
+            "django.core.files.storage.FileSystemStorage",
     },
 
     "staticfiles": {
         "BACKEND":
-        "whitenoise.storage.CompressedManifestStaticFilesStorage",
+            "whitenoise.storage.CompressedManifestStaticFilesStorage",
     },
 }
 
@@ -373,24 +372,6 @@ DEFAULT_FROM_EMAIL = os.environ.get(
     "DEFAULT_FROM_EMAIL",
     "noreply@kameeratechnologies.com",
 )
-
-
-# ============================================================
-# CSRF TRUSTED ORIGINS
-# ============================================================
-
-csrf_origins = os.environ.get(
-    "CSRF_TRUSTED_ORIGINS",
-    "",
-)
-
-if csrf_origins:
-
-    CSRF_TRUSTED_ORIGINS = [
-        origin.strip()
-        for origin in csrf_origins.split(",")
-        if origin.strip()
-    ]
 
 
 # ============================================================
