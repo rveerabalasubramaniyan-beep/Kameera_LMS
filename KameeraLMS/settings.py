@@ -3,10 +3,10 @@ Django settings for KameeraLMS project.
 
 Kameera Technologies LMS
 
-Local development:
+LOCAL DEVELOPMENT:
     Microsoft SQL Server + Windows Authentication
 
-Production / Render:
+RENDER / PRODUCTION:
     PostgreSQL through DATABASE_URL
 """
 
@@ -31,9 +31,10 @@ SECRET_KEY = os.environ.get(
     "django-development-secret-key-change-before-production",
 )
 
-DEBUG = (
-    os.environ.get("DEBUG", "True").lower() == "true"
-)
+DEBUG = os.environ.get(
+    "DEBUG",
+    "True",
+).lower() == "true"
 
 
 # ============================================================
@@ -42,29 +43,13 @@ DEBUG = (
 
 allowed_hosts = os.environ.get(
     "ALLOWED_HOSTS",
-    "127.0.0.1,localhost,kameera-lms.onrender.com",
+    "127.0.0.1,localhost",
 )
 
 ALLOWED_HOSTS = [
     host.strip()
     for host in allowed_hosts.split(",")
     if host.strip()
-]
-
-
-# ============================================================
-# CSRF TRUSTED ORIGINS
-# ============================================================
-
-csrf_origins = os.environ.get(
-    "CSRF_TRUSTED_ORIGINS",
-    "https://kameera-lms.onrender.com",
-)
-
-CSRF_TRUSTED_ORIGINS = [
-    origin.strip()
-    for origin in csrf_origins.split(",")
-    if origin.strip()
 ]
 
 
@@ -131,11 +116,8 @@ TEMPLATES = [
         "OPTIONS": {
             "context_processors": [
                 "django.template.context_processors.debug",
-
                 "django.template.context_processors.request",
-
                 "django.contrib.auth.context_processors.auth",
-
                 "django.contrib.messages.context_processors.messages",
             ],
         },
@@ -154,16 +136,22 @@ WSGI_APPLICATION = "KameeraLMS.wsgi.application"
 # DATABASE
 #
 # LOCAL:
-# Microsoft SQL Server
+#   Microsoft SQL Server
+#   Server: DESKTOP-L7KQ31C
+#   Database: KameeraLM
+#   Windows Authentication
 #
 # RENDER:
-# PostgreSQL through DATABASE_URL
+#   PostgreSQL through DATABASE_URL
 # ============================================================
 
 DATABASE_URL = os.environ.get("DATABASE_URL")
 
 
 if DATABASE_URL:
+    # --------------------------------------------------------
+    # RENDER / PRODUCTION DATABASE
+    # --------------------------------------------------------
 
     import dj_database_url
 
@@ -176,6 +164,9 @@ if DATABASE_URL:
     }
 
 else:
+    # --------------------------------------------------------
+    # LOCAL WINDOWS SQL SERVER
+    # --------------------------------------------------------
 
     DATABASES = {
         "default": {
@@ -185,9 +176,7 @@ else:
             "OPTIONS": {
                 "driver": "ODBC Driver 18 for SQL Server",
                 "trusted_connection": "yes",
-                "extra_params": (
-                    "TrustServerCertificate=yes;"
-                ),
+                "extra_params": "TrustServerCertificate=yes;",
             },
         },
     }
@@ -198,7 +187,6 @@ else:
 # ============================================================
 
 if "test" in sys.argv:
-
     DATABASES["default"] = {
         "ENGINE": "django.db.backends.sqlite3",
         "NAME": BASE_DIR / "test_db.sqlite3",
@@ -215,19 +203,16 @@ AUTH_PASSWORD_VALIDATORS = [
             "django.contrib.auth.password_validation."
             "UserAttributeSimilarityValidator",
     },
-
     {
         "NAME":
             "django.contrib.auth.password_validation."
             "MinimumLengthValidator",
     },
-
     {
         "NAME":
             "django.contrib.auth.password_validation."
             "CommonPasswordValidator",
     },
-
     {
         "NAME":
             "django.contrib.auth.password_validation."
@@ -320,10 +305,10 @@ PASSWORD_RESET_TIMEOUT = 86400
 # EMAIL
 #
 # LOCAL:
-# Email appears in VS Code terminal.
+#   Email appears in VS Code terminal.
 #
 # PRODUCTION:
-# SMTP environment variables will be used.
+#   SMTP environment variables are used.
 # ============================================================
 
 if DEBUG:
@@ -372,6 +357,24 @@ DEFAULT_FROM_EMAIL = os.environ.get(
     "DEFAULT_FROM_EMAIL",
     "noreply@kameeratechnologies.com",
 )
+
+
+# ============================================================
+# CSRF TRUSTED ORIGINS
+# ============================================================
+
+csrf_origins = os.environ.get(
+    "CSRF_TRUSTED_ORIGINS",
+    "",
+)
+
+if csrf_origins:
+
+    CSRF_TRUSTED_ORIGINS = [
+        origin.strip()
+        for origin in csrf_origins.split(",")
+        if origin.strip()
+    ]
 
 
 # ============================================================
