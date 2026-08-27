@@ -41,15 +41,35 @@ DEBUG = os.environ.get(
 # ALLOWED HOSTS
 # ============================================================
 
+# Render production domain is included by default.
+# You can also override this using the ALLOWED_HOSTS
+# environment variable on Render.
+
 allowed_hosts = os.environ.get(
     "ALLOWED_HOSTS",
-    "127.0.0.1,localhost",
+    "kameera-lms.onrender.com,localhost,127.0.0.1",
 )
 
 ALLOWED_HOSTS = [
     host.strip()
     for host in allowed_hosts.split(",")
     if host.strip()
+]
+
+
+# ============================================================
+# CSRF TRUSTED ORIGINS
+# ============================================================
+
+csrf_origins = os.environ.get(
+    "CSRF_TRUSTED_ORIGINS",
+    "https://kameera-lms.onrender.com",
+)
+
+CSRF_TRUSTED_ORIGINS = [
+    origin.strip()
+    for origin in csrf_origins.split(",")
+    if origin.strip()
 ]
 
 
@@ -136,21 +156,23 @@ WSGI_APPLICATION = "KameeraLMS.wsgi.application"
 # DATABASE
 #
 # LOCAL:
-#   Microsoft SQL Server
-#   Server: DESKTOP-L7KQ31C
-#   Database: KameeraLM
-#   Windows Authentication
+# Microsoft SQL Server
+# Server: DESKTOP-L7KQ31C
+# Database: KameeraLMS
+# Authentication: Windows Authentication
 #
 # RENDER:
-#   PostgreSQL through DATABASE_URL
+# PostgreSQL through DATABASE_URL
 # ============================================================
 
 DATABASE_URL = os.environ.get("DATABASE_URL")
 
 
 if DATABASE_URL:
+
     # --------------------------------------------------------
-    # RENDER / PRODUCTION DATABASE
+    # RENDER / PRODUCTION
+    # PostgreSQL
     # --------------------------------------------------------
 
     import dj_database_url
@@ -164,19 +186,24 @@ if DATABASE_URL:
     }
 
 else:
+
     # --------------------------------------------------------
-    # LOCAL WINDOWS SQL SERVER
+    # LOCAL WINDOWS DEVELOPMENT
+    # Microsoft SQL Server + Windows Authentication
     # --------------------------------------------------------
 
     DATABASES = {
         "default": {
             "ENGINE": "mssql",
-            "NAME": "KameeraLM",
+            "NAME": "KameeraLMS",
             "HOST": "DESKTOP-L7KQ31C",
+
             "OPTIONS": {
                 "driver": "ODBC Driver 18 for SQL Server",
                 "trusted_connection": "yes",
-                "extra_params": "TrustServerCertificate=yes;",
+                "extra_params": (
+                    "TrustServerCertificate=yes;"
+                ),
             },
         },
     }
@@ -187,6 +214,7 @@ else:
 # ============================================================
 
 if "test" in sys.argv:
+
     DATABASES["default"] = {
         "ENGINE": "django.db.backends.sqlite3",
         "NAME": BASE_DIR / "test_db.sqlite3",
@@ -255,7 +283,8 @@ STORAGES = {
 
     "staticfiles": {
         "BACKEND":
-            "whitenoise.storage.CompressedManifestStaticFilesStorage",
+            "whitenoise.storage."
+            "CompressedManifestStaticFilesStorage",
     },
 }
 
@@ -305,10 +334,10 @@ PASSWORD_RESET_TIMEOUT = 86400
 # EMAIL
 #
 # LOCAL:
-#   Email appears in VS Code terminal.
+# Email appears in VS Code terminal.
 #
 # PRODUCTION:
-#   SMTP environment variables are used.
+# SMTP environment variables are used.
 # ============================================================
 
 if DEBUG:
@@ -357,24 +386,6 @@ DEFAULT_FROM_EMAIL = os.environ.get(
     "DEFAULT_FROM_EMAIL",
     "noreply@kameeratechnologies.com",
 )
-
-
-# ============================================================
-# CSRF TRUSTED ORIGINS
-# ============================================================
-
-csrf_origins = os.environ.get(
-    "CSRF_TRUSTED_ORIGINS",
-    "",
-)
-
-if csrf_origins:
-
-    CSRF_TRUSTED_ORIGINS = [
-        origin.strip()
-        for origin in csrf_origins.split(",")
-        if origin.strip()
-    ]
 
 
 # ============================================================
