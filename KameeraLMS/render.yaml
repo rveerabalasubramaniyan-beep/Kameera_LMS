@@ -1,9 +1,9 @@
 services:
   - type: web
-    name: kameera-lms
+    name: Kameera-LMS
     runtime: python
-    buildCommand: "./build.sh"
-    startCommand: "gunicorn KameeraLMS.wsgi:application"
+    buildCommand: ./build.sh
+    startCommand: gunicorn KameeraLMS.wsgi:application
     envVars:
       - key: PYTHON_VERSION
         value: 3.13
