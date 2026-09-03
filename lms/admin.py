@@ -177,7 +177,6 @@ class LessonProgressAdmin(admin.ModelAdmin):
         "lesson__lesson_number",
     )
 
+    @admin.display(description="Course")
     def course_name(self, obj):
         return obj.lesson.course.title
-
-    course_name.short_description = "Course"
