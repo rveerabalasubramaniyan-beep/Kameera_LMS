@@ -47,7 +47,7 @@ DEBUG = os.environ.get(
 
 allowed_hosts = os.environ.get(
     "ALLOWED_HOSTS",
-    "kameera-lms.onrender.com,localhost,127.0.0.1",
+    "iyaan.onrender.com,localhost,127.0.0.1",
 )
 
 ALLOWED_HOSTS = [
